@@ -3,13 +3,29 @@ namespace AppForSEII.API.Models
 {
     public class EncargoImpresion
     {
-        [Key]
+        public EncargoImpresion()
+        {
+            
+        }
+        public EncargoImpresion(DateTime fechaEncargo, string nombreCliente, string apellidosCliente, string direccionEnvio, string numeroTelefono, string? descripcion, decimal precioTotal, MetodoPago metodoPago)
+            {
+                FechaEncargo = fechaEncargo;
+                NombreCliente = nombreCliente;
+                ApellidosCliente = apellidosCliente;
+                DireccionEnvio = direccionEnvio;
+                NumeroTelefono = numeroTelefono;
+                Descripcion = descripcion;
+                PrecioTotal = precioTotal;
+                MetodoPago = metodoPago;
+            }
+
+        
         public int Id { get; set; }
 
         [Required]
         public DateTime FechaEncargo { get; set; }
 
-        [Required]
+        [Key] 
         public string NombreCliente { get; set; }
 
         [Required]
