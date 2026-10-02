@@ -2,6 +2,20 @@ namespace AppForSEII.API.Models;
 
 public class Pieza3D
 {
+
+    public Pieza3D()
+    {
+    }
+
+    public Pieza3D(string nombre, string descripcion, double pesoGramos, decimal precioEstimado)
+    {
+        Nombre = nombre;
+        Descripcion = descripcion;
+        PesoGramos = pesoGramos;
+        PrecioEstimado = precioEstimado;
+    }
+
+    
     [Key]
     public int Id { get; set; }
 
