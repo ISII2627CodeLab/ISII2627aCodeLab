@@ -1,8 +1,27 @@
 
+using System.ComponentModel.DataAnnotations;
+
 namespace AppForSEII.API.Models
 {
     public class EncargoImpresion
     {
+        public EncargoImpresion()
+        {
+            
+        }
+
+        public EncargoImpresion(DateTime fechaEncargo, string nombreCliente, string apellidosCliente, string direccionEnvio, string numeroTelefono, string? descripcion, decimal precioTotal, MetodoPago metodoPago)
+        {
+            FechaEncargo = fechaEncargo;
+            NombreCliente = nombreCliente;
+            ApellidosCliente = apellidosCliente;
+            DireccionEnvio = direccionEnvio;
+            NumeroTelefono = numeroTelefono;
+            Descripcion = descripcion;
+            PrecioTotal = precioTotal;
+            MetodoPago = metodoPago;
+        }
+
         [Key] 
         public int Id { get; set; }
 
@@ -32,7 +51,5 @@ namespace AppForSEII.API.Models
 
         // Relaciones
         public IList<LineaEncargo> LineasEncargo { get; set; } = new List<LineaEncargo>();
-
-        
     }
 }
