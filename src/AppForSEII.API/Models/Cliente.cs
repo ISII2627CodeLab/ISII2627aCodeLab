@@ -5,9 +5,10 @@ namespace AppForSEII.API.Models
         public Cliente()
         {
         }
-        public Cliente(string direccionFacturacion)
+        public Cliente(string id, string name, string surname, string userName, string direccionFacturacion)
+        : base(id, name, surname, userName)
         {
-            DireccionFacturacion = direccionFacturacion;
+        DireccionFacturacion = direccionFacturacion;
         }
         [Required(ErrorMessage = "La dirección de facturación es obligatoria.")]
         [StringLength(200, MinimumLength = 1,
