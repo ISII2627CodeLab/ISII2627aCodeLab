@@ -1,48 +1,42 @@
+using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
+
 namespace AppForSEII.API.Models;
 
-public class Pieza3D
+public class Material
 {
-    public Pieza3D()
+    public Material()
     {
+        Piezas3D = new HashSet<Pieza3D>();
         LineasEncargo = new List<LineaEncargo>();
     }
 
-    public Pieza3D(string nombre, string? descripcion, decimal precioUnidad, double pesoGramos, int tiempoImpresionMin, CategoriaPieza categoriaPieza)
+    public Material(string nombre, decimal precioPorGramo, decimal stockGramos)
         : this()
     {
         Nombre = nombre;
-        Descripcion = descripcion;
-        PrecioUnidad = precioUnidad;
-        PesoGramos = pesoGramos;
-        TiempoImpresionMin = tiempoImpresionMin;
-        CategoriaPieza = categoriaPieza;
+        PrecioPorGramo = precioPorGramo;
+        StockGramos = stockGramos;
     }
 
     [Key]
     public int Id { get; set; }
 
     [Required]
-    [StringLength(100, MinimumLength = 2)]
-    public string Nombre { get; set; }
-
-    [StringLength(500)]
-    public string? Descripcion { get; set; }
+    [StringLength(50)]
+    public string Nombre { get; set; } = string.Empty;
 
     [Required]
-    [Range(0.01, 10000.00)]
+    [Range(0.01, 1000.00)]
     [Precision(18, 2)]
-    public decimal PrecioUnidad { get; set; }
+    public decimal PrecioPorGramo { get; set; }
 
     [Required]
-    [Range(0.1, 50000.0)]
-    public double PesoGramos { get; set; }
+    [Range(0.0, 100000.0)]
+    [Precision(18, 2)]
+    public decimal StockGramos { get; set; }
 
-    [Required]
-    [Range(1, 10080)]
-    public int TiempoImpresionMin { get; set; }
-
-    [Required]
-    public CategoriaPieza CategoriaPieza { get; set; }
-
+    // Relaciones según el diagrama UML
+    public ICollection<Pieza3D> Piezas3D { get; set; }
     public ICollection<LineaEncargo> LineasEncargo { get; set; }
 }
