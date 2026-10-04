@@ -36,7 +36,7 @@ public class Material
     [Precision(18, 2)]
     public decimal StockGramos { get; set; }
 
-    // Relaciones según el diagrama UML
+    // Relaciones
     public ICollection<Pieza3D> Piezas3D { get; set; }
     public ICollection<LineaEncargo> LineasEncargo { get; set; }
 }
