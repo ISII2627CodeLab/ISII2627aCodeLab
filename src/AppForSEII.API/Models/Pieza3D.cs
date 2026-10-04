@@ -37,7 +37,7 @@ public class Pieza3D
     public decimal PrecioEstimado { get; set; }
 
     // Relaciones
-    // public int MaterialId { get; set; }
-    // public Material? Material { get; set; }
-    // public IList<LineaEncargo> LineasEncargo { get; set; } = new List<LineaEncargo>();
+    public int MaterialId { get; set; }
+    public Material? Material { get; set; }
+    public IList<LineaEncargo> LineasEncargo { get; set; } = new List<LineaEncargo>();
 }
