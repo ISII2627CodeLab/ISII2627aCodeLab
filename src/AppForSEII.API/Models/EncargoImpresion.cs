@@ -30,7 +30,8 @@ namespace AppForSEII.API.Models
         public MetodoPago MetodoPago { get; set; }
 
         // Relaciones
-        //public IList<LineaEncargo> LineasEncargo { get; set; } = new List<LineaEncargo>();
+        public IList<LineaEncargo> LineasEncargo { get; set; } = new List<LineaEncargo>();
+
         
     }
 }
