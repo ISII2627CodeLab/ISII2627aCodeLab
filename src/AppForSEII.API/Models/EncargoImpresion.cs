@@ -3,14 +3,15 @@ namespace AppForSEII.API.Models
 {
     public class EncargoImpresion
     {
-        [Key]
+        [Key] 
         public int Id { get; set; }
 
         [Required]
-        public DateTime FechaEncargo { get; set; }
+        [StringLength(50)]
+        public string NombreCliente { get; set; } = string.Empty;
 
         [Required]
-        public string NombreCliente { get; set; }
+        public DateTime FechaEncargo { get; set; }
 
         [Required]
         public string ApellidosCliente { get; set; }
