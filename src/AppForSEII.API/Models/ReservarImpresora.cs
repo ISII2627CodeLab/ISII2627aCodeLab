@@ -22,8 +22,8 @@
         public MetodoPago MetodoPago { get; set; }
 
     
-        public string? ClienteId { get; set; }
-        public Cliente? Cliente { get; set; }
+        //public string? ClienteId { get; set; }
+        //public Cliente? Cliente { get; set; }
 
         public IList<LineaReserva> LineaReservas { get; set; } = new List<LineaReserva>();
     }
