@@ -30,12 +30,12 @@ public class LineaEncargo
     public decimal Subtotal { get; set; }
 
     //Relaciones
-    // public int EncargoImpresionId { get; set; }
-    // public EncargoImpresion EncargoImpresion { get; set; } = null!;
+    public int EncargoImpresionId { get; set; }
+    public EncargoImpresion EncargoImpresion { get; set; } = null!;
 
-    // public int Pieza3DId { get; set; }
-    // public Pieza3D Pieza { get; set; } = null!;
+    public int Pieza3DId { get; set; }
+    public Pieza3D Pieza { get; set; } = null!;
 
-    // public int MaterialId { get; set; }
-    // public Material MaterialSeleccionado { get; set; } = null!;
+    public int MaterialId { get; set; }
+    public Material MaterialSeleccionado { get; set; } = null!;
 }
