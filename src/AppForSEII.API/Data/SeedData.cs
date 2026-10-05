@@ -110,15 +110,20 @@ namespace AppForSEII.API.Data
             dbContext.SaveChanges();
 
             // 2. Seed Piezas3D
+            var pla = dbContext.Materiales.FirstOrDefault(m => m.Nombre == "PLA Premium");
+            var petg = dbContext.Materiales.FirstOrDefault(m => m.Nombre == "PETG Resistente");
+
             if (dbContext.Piezas3D.FirstOrDefault(p => p.Nombre == "Soporte Auriculares") == null)
             {
                 var pieza = new Pieza3D("Soporte Auriculares", "HerramientasYAccesorios", 150.0, 15.0m);
+                pieza.Material = pla;
                 dbContext.Piezas3D.Add(pieza);
             }
 
             if (dbContext.Piezas3D.FirstOrDefault(p => p.Nombre == "Figura Dragon") == null)
             {
                 var pieza = new Pieza3D("Figura Dragon", "Decoracion", 80.0, 10.0m);
+                pieza.Material = petg;
                 dbContext.Piezas3D.Add(pieza);
             }
 
