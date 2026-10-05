@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AppFor3DModels.API.Data
+namespace AppForSEII.API.Data
 {
      public class SeedData {
         public static void Initialize(ApplicationDbContext dbContext, IServiceProvider serviceProvider, ILogger logger) {
@@ -62,31 +62,31 @@ namespace AppFor3DModels.API.Data
         public static void SeedUsers(UserManager<ApplicationUser> userManager, List<string> roles) {
             //first, it checks the user does not already exist in the DB
             if (userManager.FindByNameAsync("elena@uclm.es").Result == null) {
-                ApplicationUser user = new ApplicationUser("1", "Elena", "Navarro Martínez", "elena@uclm.es");
-                user.EmailConfirmed = true;
+                Cliente cliente = new Cliente("1", "Elena", "Navarro Martínez", "elena@uclm.es", "Calle Cervantes 1");
+                cliente.EmailConfirmed = true;
 
-                var result = userManager.CreateAsync(user, "Password1234%");
+                var result = userManager.CreateAsync(cliente, "Password1234%");
                 result.Wait();
 
                 if (result.IsCompletedSuccessfully) {
                     //administrator role
-                    userManager.AddToRoleAsync(user, roles[0]).Wait();
+                    userManager.AddToRoleAsync(cliente, roles[0]).Wait();
                 }
             }
 
 
             if (userManager.FindByNameAsync("peter@uclm.es").Result == null) {
                 //A customer class has been defined because it has different attributes (purchase, rental, etc.)
-                ApplicationUser user = new ApplicationUser("3", "Peter", "Jackson", "peter@uclm.es");
-                user.EmailConfirmed = true;
+                Cliente cliente = new Cliente("3", "Peter", "Jackson", "peter@uclm.es", "Calle Dulcinea 2");
+                cliente.EmailConfirmed = true;
 
-                var result = userManager.CreateAsync(user, "OtherPass12$");
+                var result = userManager.CreateAsync(cliente, "OtherPass12$");
 
                 result.Wait();
 
                 if (result.IsCompletedSuccessfully) {
                     //customer role
-                    userManager.AddToRoleAsync(user, roles[2]).Wait();
+                    userManager.AddToRoleAsync(cliente, roles[2]).Wait();
 
                 }
             }
