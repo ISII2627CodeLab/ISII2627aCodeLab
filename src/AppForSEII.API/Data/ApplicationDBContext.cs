@@ -23,6 +23,11 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<CompraModelo3D> ComprasModelo3D { get; set; }
     public DbSet<LineaCompraModelo> LineasCompraModelo { get; set; }
 
+    public DbSet<Impresora3D> Impresoras3Ds { get; set; }
 
+    public DbSet<LineaReserva> LineasReservas { get; set; }
 
+    public DbSet<ReservaImpresora> ReservaImpresoras { get; set; }
+    public DbSet<TiempoReserva> TiemposReservas { get; set; }
+    public DbSet<TipoImpresora> TipoImpresoras { get; set; }
 }
