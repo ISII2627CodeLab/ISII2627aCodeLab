@@ -1,8 +1,8 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace AppForSEII.API.Models
-{
+namespace AppForSEII.API.Models;
+
     public class EncargoImpresion
     {
         public EncargoImpresion()
@@ -53,4 +53,3 @@ namespace AppForSEII.API.Models
         // Relaciones
         public IList<LineaEncargo> LineasEncargo { get; set; } = new List<LineaEncargo>();
     }
-}
