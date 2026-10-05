@@ -3,8 +3,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace AppForSEII.API.Data;
 
-    public class SeedData
-    {
+    public class SeedData{
         public static void Initialize(ApplicationDbContext dbContext, IServiceProvider serviceProvider, ILogger logger)
         {
             List<string> rolesNames = new List<string> { "Administrator", "Employee", "Customer" };
@@ -50,10 +49,13 @@ namespace AppForSEII.API.Data;
             {
                 var cliente = dbContext.Users.OfType<Cliente>().FirstOrDefault(u => u.UserName == "peter@uclm.es");
                 SeedEncargoImpresion(dbContext, cliente);
+                
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, "An error occurred seeding an EncargoImpresion in the Database.");
+                
+            } try{
                 SeedLicenciasModelo3D(dbContext);
             }
             catch (Exception ex)
@@ -108,9 +110,9 @@ namespace AppForSEII.API.Data;
                 }
             }
         }
-        public static void SeedLicenciasModelo3D(ApplicationDbContext dbcontext)
+        public static void SeedLicenciasModelo3D(ApplicationDbContext dbContext)
         {
-            if (dbcontext.LicenciasModelo3D.FirstOrDefault(l => l.Id == 1) == null)
+            if (dbContext.LicenciasModelo3D.FirstOrDefault(l => l.Id == 1) == null)
             {
                 var licencia = new LicenciaModelo3D
                 {
@@ -118,13 +120,13 @@ namespace AppForSEII.API.Data;
                     Nombre = "Licencia Estándar",
                     FechaExpiracion = DateTime.Now.AddYears(1)
                 };
-                dbcontext.LicenciasModelo3D.Add(licencia);
+                dbContext.LicenciasModelo3D.Add(licencia);
             }
-            dbcontext.SaveChanges();
+            dbContext.SaveChanges();
         }
-        public static void SeedModelos3D(ApplicationDbContext dbcontext)
+        public static void SeedModelos3D(ApplicationDbContext dbContext)
         {
-            if (dbcontext.Modelos3D.FirstOrDefault(m => m.Nombre == "Robot") == null)
+            if (dbContext.Modelos3D.FirstOrDefault(m => m.Nombre == "Robot") == null)
             {
                 var modelo = new Modelo3D
                 {   
@@ -134,8 +136,9 @@ namespace AppForSEII.API.Data;
                     Formato = FormatoModelo3D.OBJ,
                     Precio = 15
                 };
-                dbcontext.Modelos3D.Add(modelo);
+                dbContext.Modelos3D.Add(modelo);
             }
+        }
 
         public static void SeedMaterialesYPiezas(ApplicationDbContext dbContext)
         {
@@ -213,7 +216,7 @@ namespace AppForSEII.API.Data;
             }
 
             dbContext.SaveChanges();
-            if (dbcontext.Modelos3D.FirstOrDefault(m => m.Nombre == "Castillo") == null)
+            if (dbContext.Modelos3D.FirstOrDefault(m => m.Nombre == "Castillo") == null)
             {
                 var modelo = new Modelo3D
                 {
@@ -223,10 +226,10 @@ namespace AppForSEII.API.Data;
                     Formato = FormatoModelo3D.STL,
                     Precio = 20
                 };
-                dbcontext.Modelos3D.Add(modelo);
+                dbContext.Modelos3D.Add(modelo);
             }
 
-            if (dbcontext.Modelos3D.FirstOrDefault(m => m.Nombre == "Nave Espacial") == null)
+            if (dbContext.Modelos3D.FirstOrDefault(m => m.Nombre == "Nave Espacial") == null)
             {
                 var modelo = new Modelo3D
                 {
@@ -236,14 +239,14 @@ namespace AppForSEII.API.Data;
                     Formato = FormatoModelo3D.TresMF,
                     Precio = 30.0m
                 };
-                dbcontext.Modelos3D.Add(modelo);
+                dbContext.Modelos3D.Add(modelo);
             }
 
-            dbcontext.SaveChanges();
+            dbContext.SaveChanges();
         }
-        public static void SeedImpresora3D(ApplicationDbContext dbcontext)
+        public static void SeedImpresora3D(ApplicationDbContext dbContext)
         {
-            if (dbcontext.Impresoras3Ds.FirstOrDefault(m => m.Nombre == "Robot") == null)
+            if (dbContext.Impresoras3Ds.FirstOrDefault(m => m.Nombre == "Robot") == null)
             {
                 var impresora = new Impresora3D
                 (   
@@ -253,10 +256,10 @@ namespace AppForSEII.API.Data;
        "Impresora 3D de gran formato con una superficie de impresión de 300 x 300 x 400 mm. Ideal para proyectos grandes y detallados.",
         0.15m
                 );
-                dbcontext.Impresoras3Ds.Add(impresora);
+                dbContext.Impresoras3Ds.Add(impresora);
             }
 
-            if (dbcontext.Impresoras3Ds.FirstOrDefault(m => m.Nombre == "Castillo") == null)
+            if (dbContext.Impresoras3Ds.FirstOrDefault(m => m.Nombre == "Castillo") == null)
             {
                 var impresora = new Impresora3D
                 (
@@ -266,10 +269,10 @@ namespace AppForSEII.API.Data;
                     "Impresora 3D de resina con una resolución de 0.05 mm y una superficie de impresión de 129 x 80 x 160 mm. Ideal para modelos detallados y miniaturas.",
                     0.20m
                 );
-                dbcontext.Impresoras3Ds.Add(impresora);
+                dbContext.Impresoras3Ds.Add(impresora);
             }
 
-            if (dbcontext.Impresoras3Ds.FirstOrDefault(m => m.Nombre == "Nave Espacial") == null)
+            if (dbContext.Impresoras3Ds.FirstOrDefault(m => m.Nombre == "Nave Espacial") == null)
             {
                 var impresora = new Impresora3D
                 (
@@ -279,13 +282,13 @@ namespace AppForSEII.API.Data;
                     "Impresora 3D de resina con una resolución de 0.05 mm y una superficie de impresión de 129 x 80 x 160 mm. Ideal para modelos detallados y miniaturas.",
                     30.0m
                 );
-                dbcontext.Impresoras3Ds.Add(impresora);
+                dbContext.Impresoras3Ds.Add(impresora);
             }
 
-            dbcontext.SaveChanges();
+            dbContext.SaveChanges();
   
         }
-    }
+    
 
 } 
         
