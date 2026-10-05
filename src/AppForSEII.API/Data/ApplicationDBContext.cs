@@ -17,13 +17,18 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
 
     public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+    public DbSet<Cliente> Clientes { get; set; }
+    public DbSet<EncargoImpresion> EncargosImpresion { get; set; }
+    public DbSet<LineaEncargo> LineasEncargo { get; set; }
+    public DbSet<Pieza3D> Piezas3D { get; set;}
+    public DbSet<Material> Materiales { get; set; }
 
-// Tablas de tu caso de uso (Compra de Accesorios)
+
     public DbSet<Accesorio> Accesorios { get; set; }
     public DbSet<CompraAccesorios> ComprasAccesorios { get; set; }
     public DbSet<LineaCompraAccesorio> LineasCompraAccesorio { get; set; }
   
-    public DbSet<Cliente> Clientes { get; set; }
+    
     public DbSet<LicenciaModelo3D> LicenciasModelo3D { get; set; }
     public DbSet<Modelo3D> Modelos3D { get; set; }
     public DbSet<CompraModelo3D> ComprasModelo3D { get; set; }
