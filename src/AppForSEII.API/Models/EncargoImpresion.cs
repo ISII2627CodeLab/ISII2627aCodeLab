@@ -44,6 +44,7 @@ namespace AppForSEII.API.Models
         public string? Descripcion { get; set; }
 
         [Required]
+        [Column(TypeName = "decimal(18,2)")]
         public decimal PrecioTotal { get; set; }
 
         [Required]

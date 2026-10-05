@@ -34,8 +34,10 @@ public class LineaEncargo
     public EncargoImpresion EncargoImpresion { get; set; } = null!;
 
     public int Pieza3DId { get; set; }
+    [DeleteBehavior(DeleteBehavior.NoAction)]
     public Pieza3D Pieza { get; set; } = null!;
 
     public int MaterialId { get; set; }
+    [DeleteBehavior(DeleteBehavior.NoAction)]
     public Material MaterialSeleccionado { get; set; } = null!;
 }

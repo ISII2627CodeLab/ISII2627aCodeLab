@@ -39,4 +39,7 @@ public class Material
     // Relaciones
     public ICollection<Pieza3D> Piezas3D { get; set; }
     public ICollection<LineaEncargo> LineasEncargo { get; set; }
+
+
+
 }
