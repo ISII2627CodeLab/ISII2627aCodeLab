@@ -5,7 +5,7 @@ namespace AppForSEII.API.Models
         [Key]
         public int Id { get; set; }
 
-        [Required] 
+        [Required]  
         public DateTime FechaReserva { get; set; }
 
         [Required]
@@ -23,8 +23,8 @@ namespace AppForSEII.API.Models
         [Required]
         public MetodoPago MetodoPago { get; set; }
 
-        //public string? ClienteId { get; set; }
-       // public Cliente? Cliente { get; set; }
+        public string? ClienteId { get; set; }
+       public Cliente? Cliente { get; set; }
 
         public IList<LineaReserva> LineaReservas { get; set; } = new List<LineaReserva>();
     }

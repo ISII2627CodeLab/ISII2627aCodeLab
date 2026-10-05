@@ -8,7 +8,7 @@ public class Impresora3D
     [Required]
     public string Nombre { get; set; } = string.Empty;
 
-    [Required]
+    [Required] 
     public string Modelo { get; set; } = string.Empty;
 
     [Required]
