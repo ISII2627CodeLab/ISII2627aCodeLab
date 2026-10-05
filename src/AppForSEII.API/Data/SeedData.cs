@@ -92,6 +92,20 @@ namespace AppFor3DModels.API.Data
             }
 
         }
+        public static void SeedLicenciasModelo3D(ApplicationDbContext dbcontext)
+        {
+            if (dbcontext.LicenciasModelo3D.FirstOrDefault(l => l.Id == 1) == null)
+            {
+                var licencia = new LicenciaModelo3D
+                {
+                    Id = 1,
+                    Nombre = "Licencia Estándar",
+                    FechaExpiracion = DateTime.Now.AddYears(1)
+                };
+                dbcontext.LicenciasModelo3D.Add(licencia);
+            }
+            dbcontext.SaveChanges();
+        }
         public static void SeedModelos3D(ApplicationDbContext dbcontext)
         {
             if (dbcontext.Modelos3D.FirstOrDefault(m => m.Nombre == "Robot") == null)
@@ -133,20 +147,6 @@ namespace AppFor3DModels.API.Data
                 dbcontext.Modelos3D.Add(modelo);
             }
 
-            dbcontext.SaveChanges();
-        }
-        public static void SeedLicenciasModelo3D(ApplicationDbContext dbcontext)
-        {
-            if (dbcontext.LicenciasModelo3D.FirstOrDefault(l => l.Id == 1) == null)
-            {
-                var licencia = new LicenciaModelo3D
-                {
-                    Id = 1,
-                    Nombre = "Licencia Estándar",
-                    FechaExpiracion = DateTime.Now.AddYears(1)
-                };
-                dbcontext.LicenciasModelo3D.Add(licencia);
-            }
             dbcontext.SaveChanges();
         }
     }
