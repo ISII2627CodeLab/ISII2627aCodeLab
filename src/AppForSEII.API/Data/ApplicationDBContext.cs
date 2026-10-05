@@ -17,6 +17,12 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
 
     public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+
+// Tablas de tu caso de uso (Compra de Accesorios)
+    public DbSet<Accesorio> Accesorios { get; set; }
+    public DbSet<CompraAccesorios> ComprasAccesorios { get; set; }
+    public DbSet<LineaCompraAccesorio> LineasCompraAccesorio { get; set; }
+  
     public DbSet<Cliente> Clientes { get; set; }
     public DbSet<LicenciaModelo3D> LicenciasModelo3D { get; set; }
     public DbSet<Modelo3D> Modelos3D { get; set; }
