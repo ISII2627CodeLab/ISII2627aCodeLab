@@ -2,6 +2,14 @@ namespace AppForSEII.API.Models;
 
 public class Impresora3D
 {
+    public Impresora3D(string nombre, string modelo, TipoImpresora tipo, string descripcion, decimal precioKilovatioHora)
+    {
+        Nombre = nombre;
+        Modelo = modelo;
+        Tipo = tipo;
+        Descripcion = descripcion;
+        PrecioKilovatioHora = precioKilovatioHora;
+    } 
     [Key]
     public int Id { get; set; }
 
