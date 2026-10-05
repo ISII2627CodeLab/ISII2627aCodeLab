@@ -6,6 +6,7 @@ public class LineaCompraAccesorio
     {
     }
 
+// Constructor con parametros opcionales para CompraAccesorios
     public LineaCompraAccesorio(int id, int cantidad, decimal precioUnidad, decimal subtotal, Accesorio accesorio, CompraAccesorios? compraAccesorios = null)
     {
         Id = id;
@@ -41,4 +42,5 @@ public class LineaCompraAccesorio
     //Relacion con Accesorio
     public int AccesorioId { get; set; }
     public Accesorio Accesorio { get; set; } = default!;
+
 }
