@@ -1,5 +1,13 @@
-namespace AppForSEII.API.Data {
-    public class SeedData {
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace AppFor3DModels.API.Data
+{
+     public class SeedData {
         public static void Initialize(ApplicationDbContext dbContext, IServiceProvider serviceProvider, ILogger logger) {
             List<string> rolesNames = new List<string> { "Administrator", "Employee", "Customer" };
 
@@ -18,9 +26,23 @@ namespace AppForSEII.API.Data {
             catch (Exception ex) {
                 logger.LogError(ex, "An error occurred seeding the Users in the Database.");
             }
+            try
+            {
+                SeedModelos3D(dbContext);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "An error occurred seeding the Modelos3D in the Database.");
+            }
 
- 
-
+            try
+            {
+                SeedLicenciasModelo3D(dbContext);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "An error occurred seeding the LicenciasModelo3D in the Database.");
+            }
         }
 
         public static void SeedRoles(RoleManager<IdentityRole> roleManager, List<string> roles) {
@@ -70,10 +92,65 @@ namespace AppForSEII.API.Data {
             }
 
         }
+        public static void SeedModelos3D(ApplicationDbContext dbcontext)
+        {
+            if (dbcontext.Modelos3D.FirstOrDefault(m => m.Nombre == "Robot") == null)
+            {
+                var modelo = new Modelo3D
+                {   
+                    Id = 1,
+                    Nombre = "Robot",
+                    Categoria = "Personajes",
+                    Formato = FormatoModelo3D.OBJ,
+                    Precio = 15
+                };
+                dbcontext.Modelos3D.Add(modelo);
+            }
 
+            if (dbcontext.Modelos3D.FirstOrDefault(m => m.Nombre == "Castillo") == null)
+            {
+                var modelo = new Modelo3D
+                {
+                    Id = 2,
+                    Nombre = "Castillo",
+                    Categoria = "Arquitectura",
+                    Formato = FormatoModelo3D.STL,
+                    Precio = 20
+                };
+                dbcontext.Modelos3D.Add(modelo);
+            }
 
+            if (dbcontext.Modelos3D.FirstOrDefault(m => m.Nombre == "Nave Espacial") == null)
+            {
+                var modelo = new Modelo3D
+                {
+                    Id = 3,
+                    Nombre = "Nave Espacial",
+                    Categoria = "Vehículos",
+                    Formato = FormatoModelo3D.TresMF,
+                    Precio = 30.0m
+                };
+                dbcontext.Modelos3D.Add(modelo);
+            }
 
-
-
+            dbcontext.SaveChanges();
+        }
+        public static void SeedLicenciasModelo3D(ApplicationDbContext dbcontext)
+        {
+            if (dbcontext.LicenciasModelo3D.FirstOrDefault(l => l.Id == 1) == null)
+            {
+                var licencia = new LicenciaModelo3D
+                {
+                    Id = 1,
+                    Nombre = "Licencia Estándar",
+                    FechaExpiracion = DateTime.Now.AddYears(1)
+                };
+                dbcontext.LicenciasModelo3D.Add(licencia);
+            }
+            dbcontext.SaveChanges();
+        }
     }
-}
+
+} 
+        
+    
