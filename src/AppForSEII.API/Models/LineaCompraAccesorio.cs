@@ -1,46 +1,59 @@
-namespace AppForSEII.API.Models;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
-public class LineaCompraAccesorio
+namespace AppForSEII.API.Models
 {
-    public LineaCompraAccesorio()
+    public class LineaCompraAccesorio
     {
-    }
+        [Key]
+        public int Id { get; set; }
 
-// Constructor con parametros opcionales para CompraAccesorios
-    public LineaCompraAccesorio(int id, int cantidad, decimal precioUnidad, decimal subtotal, Accesorio accesorio, CompraAccesorios? compraAccesorios = null)
-    {
-        Id = id;
-        Cantidad = cantidad;
-        PrecioUnidad = precioUnidad;
-        Subtotal = subtotal;
+        [Required]
+        public int Cantidad { get; set; }
 
-        if (accesorio != null)
+        [Precision(10, 2)]
+        public decimal PrecioUnidad { get; set; }
+
+        [Precision(10, 2)]
+        public decimal Subtotal { get; set; }
+
+        [Required]
+        public int CompraAccesoriosId { get; set; }
+
+        [ForeignKey(nameof(CompraAccesoriosId))]
+        [DeleteBehavior(DeleteBehavior.NoAction)]
+        public CompraAccesorios CompraAccesorios { get; set; } = null!;
+
+        [Required]
+        public int AccesorioId { get; set; }
+
+        [ForeignKey(nameof(AccesorioId))]
+        [DeleteBehavior(DeleteBehavior.NoAction)]
+        public Accesorio Accesorio { get; set; } = null!;
+
+        public LineaCompraAccesorio()
         {
-            Accesorio = accesorio;
-            AccesorioId = accesorio.Id;
         }
 
-        if (compraAccesorios != null)
+        public LineaCompraAccesorio(int cantidad, decimal precioUnidad, decimal subtotal,
+                                    Accesorio accesorio, CompraAccesorios? compraAccesorios = null)
         {
-            CompraAccesorios = compraAccesorios;
-            CompraAccesoriosId = compraAccesorios.Id;
+            Cantidad = cantidad;
+            PrecioUnidad = precioUnidad;
+            Subtotal = subtotal;
+
+            if (accesorio != null)
+            {
+                Accesorio = accesorio;
+                AccesorioId = accesorio.Id;
+            }
+
+            if (compraAccesorios != null)
+            {
+                CompraAccesorios = compraAccesorios;
+                CompraAccesoriosId = compraAccesorios.Id;
+            }
         }
     }
-
-    public int Id { get; set; }
-
-    public int Cantidad { get; set; }
-
-    public decimal PrecioUnidad { get; set; }
-
-    public decimal Subtotal { get; set; }
-
-    //Relacion con CompraAccesorios
-    public int CompraAccesoriosId { get; set; }
-    public CompraAccesorios CompraAccesorios { get; set; } = default!;
-
-    //Relacion con Accesorio
-    public int AccesorioId { get; set; }
-    public Accesorio Accesorio { get; set; } = default!;
-
 }
