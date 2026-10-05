@@ -28,6 +28,5 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<LineaReserva> LineasReservas { get; set; }
 
     public DbSet<ReservaImpresora> ReservaImpresoras { get; set; }
-    public DbSet<TiempoReserva> TiemposReservas { get; set; }
-    public DbSet<TipoImpresora> TipoImpresoras { get; set; }
+   
 }
