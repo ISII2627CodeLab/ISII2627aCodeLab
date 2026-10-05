@@ -11,9 +11,9 @@ public class Impresora3D
     [Required]
     public string Modelo { get; set; } = string.Empty;
 
-    //[Required]
-    //public TipoImpresora Tipo { get; set; } 
-    
+    [Required]
+    public TipoImpresora Tipo { get; set; } 
+
     [Required]
     public string Descripcion { get; set; } = string.Empty;
 
