@@ -149,6 +149,50 @@ namespace AppForSEII.API.Data
 
             dbcontext.SaveChanges();
         }
+        public static void SeedImpresora3D(ApplicationDbContext dbcontext)
+        {
+            if (dbcontext.Impresoras3Ds.FirstOrDefault(m => m.Nombre == "Robot") == null)
+            {
+                var impresora = new Impresora3D
+                (   
+                  "crusa",
+        "CR-10",
+        TipoImpresora.Filamento,
+       "Impresora 3D de gran formato con una superficie de impresión de 300 x 300 x 400 mm. Ideal para proyectos grandes y detallados.",
+        0.15m
+                );
+                dbcontext.Impresoras3Ds.Add(impresora);
+            }
+
+            if (dbcontext.Impresoras3Ds.FirstOrDefault(m => m.Nombre == "Castillo") == null)
+            {
+                var impresora = new Impresora3D
+                (
+                    "Elegoo Mars 2 Pro",
+                    "Elegoo Mars 2 Pro",
+                    TipoImpresora.Resina,
+                    "Impresora 3D de resina con una resolución de 0.05 mm y una superficie de impresión de 129 x 80 x 160 mm. Ideal para modelos detallados y miniaturas.",
+                    0.20m
+                );
+                dbcontext.Impresoras3Ds.Add(impresora);
+            }
+
+            if (dbcontext.Impresoras3Ds.FirstOrDefault(m => m.Nombre == "Nave Espacial") == null)
+            {
+                var impresora = new Impresora3D
+                (
+                    "Nave Espacial",
+                    "Nave Espacial",
+                    TipoImpresora.Resina,
+                    "Impresora 3D de resina con una resolución de 0.05 mm y una superficie de impresión de 129 x 80 x 160 mm. Ideal para modelos detallados y miniaturas.",
+                    30.0m
+                );
+                dbcontext.Impresoras3Ds.Add(impresora);
+            }
+
+            dbcontext.SaveChanges();
+  
+        }
     }
 
 } 
