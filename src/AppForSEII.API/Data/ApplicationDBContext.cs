@@ -18,6 +18,10 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
     public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
+// Tablas de tu caso de uso (Compra de Accesorios)
+    public DbSet<Accesorio> Accesorios { get; set; }
+    public DbSet<CompraAccesorios> ComprasAccesorios { get; set; }
+    public DbSet<LineaCompraAccesorio> LineasCompraAccesorio { get; set; }
 
 
 
