@@ -33,13 +33,13 @@ namespace AppForSEII.API.Models;
         public DateTime FechaEncargo { get; set; }
 
         [Required]
-        public string ApellidosCliente { get; set; }
+        public string ApellidosCliente { get; set; } = string.Empty;
 
         [Required]
-        public string DireccionEnvio { get; set; }
+        public string DireccionEnvio { get; set; } = string.Empty;
 
         [Required]
-        public string NumeroTelefono { get; set; }
+        public string NumeroTelefono { get; set; } = string.Empty;
 
         public string? Descripcion { get; set; }
 
