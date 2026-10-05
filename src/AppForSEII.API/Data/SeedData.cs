@@ -1,3 +1,6 @@
+using AppForSEII.API.Models;
+using Microsoft.AspNetCore.Identity;
+
 namespace AppForSEII.API.Data
 {
     public class SeedData
@@ -28,7 +31,6 @@ namespace AppForSEII.API.Data
 
             try
             {
-                // Inicializa los catalogos de Materiales y Piezas3D
                 SeedMaterialesYPiezas(dbContext);
             }
             catch (Exception ex)
@@ -39,8 +41,6 @@ namespace AppForSEII.API.Data
             try
             {
                 var cliente = dbContext.Users.OfType<Cliente>().FirstOrDefault(u => u.UserName == "peter@uclm.es");
-
-                // Inicializa el encargo de impresion de prueba
                 SeedEncargoImpresion(dbContext, cliente);
             }
             catch (Exception ex)
@@ -81,8 +81,7 @@ namespace AppForSEII.API.Data
 
             if (userManager.FindByNameAsync("peter@uclm.es").Result == null)
             {
-                // Instanciado como Cliente según el diagrama UML
-                Cliente user = new Cliente("3", "Peter", "Jackson", "peter@uclm.es", "Avda. España s/n, Albacete");
+                ApplicationUser user = new ApplicationUser("3", "Peter", "Jackson", "peter@uclm.es");
                 user.EmailConfirmed = true;
 
                 var result = userManager.CreateAsync(user, "OtherPass12$");
@@ -97,30 +96,15 @@ namespace AppForSEII.API.Data
 
         public static void SeedMaterialesYPiezas(ApplicationDbContext dbContext)
         {
-            Material materialPla;
-            Material materialPetg;
-
             // 1. Seed Materiales
-            var pla = dbContext.Materiales.FirstOrDefault(m => m.Nombre == "PLA Premium");
-            if (pla == null)
+            if (dbContext.Materiales.FirstOrDefault(m => m.Nombre == "PLA Premium") == null)
             {
-                materialPla = new Material("PLA Premium", 0.05m, 5000m);
-                dbContext.Materiales.Add(materialPla);
-            }
-            else
-            {
-                materialPla = pla;
+                dbContext.Materiales.Add(new Material("PLA Premium", 0.05m, 5000m));
             }
 
-            var petg = dbContext.Materiales.FirstOrDefault(m => m.Nombre == "PETG Resistente");
-            if (petg == null)
+            if (dbContext.Materiales.FirstOrDefault(m => m.Nombre == "PETG Resistente") == null)
             {
-                materialPetg = new Material("PETG Resistente", 0.08m, 3000m);
-                dbContext.Materiales.Add(materialPetg);
-            }
-            else
-            {
-                materialPetg = petg;
+                dbContext.Materiales.Add(new Material("PETG Resistente", 0.08m, 3000m));
             }
 
             dbContext.SaveChanges();
@@ -128,30 +112,27 @@ namespace AppForSEII.API.Data
             // 2. Seed Piezas3D
             if (dbContext.Piezas3D.FirstOrDefault(p => p.Nombre == "Soporte Auriculares") == null)
             {
-                var pieza = new Pieza3D("Soporte Auriculares", 150m, CategoriaPieza.HerramientasYAccesorios);
-                pieza.MaterialesValidos.Add(materialPla);
-                pieza.MaterialesValidos.Add(materialPetg);
-
+                var pieza = new Pieza3D("Soporte Auriculares", "HerramientasYAccesorios", 150.0, 15.0m);
                 dbContext.Piezas3D.Add(pieza);
             }
 
             if (dbContext.Piezas3D.FirstOrDefault(p => p.Nombre == "Figura Dragon") == null)
             {
-                var pieza = new Pieza3D("Figura Dragon", 80m, CategoriaPieza.Decoracion);
-                pieza.MaterialesValidos.Add(materialPla);
-
+                var pieza = new Pieza3D("Figura Dragon", "Decoracion", 80.0, 10.0m);
                 dbContext.Piezas3D.Add(pieza);
             }
 
             dbContext.SaveChanges();
         }
 
-        public static void SeedEncargoImpresion(ApplicationDbContext dbContext, Cliente cliente)
+        public static void SeedEncargoImpresion(ApplicationDbContext dbContext, Cliente? cliente)
         {
-            if (dbContext.EncargosImpresion.FirstOrDefault(e => e.Id == 1) == null)
+            if (!dbContext.EncargosImpresion.Any())
             {
-                var pieza = dbContext.Piezas3D.First();
-                var material = dbContext.Materiales.First();
+                var pieza = dbContext.Piezas3D.FirstOrDefault();
+                var material = dbContext.Materiales.FirstOrDefault();
+
+                if (pieza == null || material == null) return;
 
                 var encargo = new EncargoImpresion
                 {
@@ -162,8 +143,7 @@ namespace AppForSEII.API.Data
                     NumeroTelefono = "600123456",
                     Descripcion = "Encargo de prueba inicial",
                     PrecioTotal = 15.0m,
-                    MetodoPago = MetodoPago.Bizum,
-                    Cliente = cliente
+                    MetodoPago = MetodoPago.Bizum
                 };
 
                 var linea = new LineaEncargo
@@ -176,7 +156,10 @@ namespace AppForSEII.API.Data
                     EncargoImpresion = encargo
                 };
 
-                encargo.LineaEncargos.Add(linea);
+                if (encargo.LineasEncargo != null)
+                {
+                    encargo.LineasEncargo.Add(linea);
+                }
 
                 dbContext.EncargosImpresion.Add(encargo);
             }
