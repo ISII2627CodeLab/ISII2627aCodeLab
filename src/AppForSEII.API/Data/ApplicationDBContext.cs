@@ -16,7 +16,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     }
 
 
-
     public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
 // Tablas de tu caso de uso (Compra de Accesorios)
