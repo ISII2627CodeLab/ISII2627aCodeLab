@@ -4,9 +4,15 @@ public class LineaEncargo
 {
     public LineaEncargo()
     {
+        EncargoImpresion = null!;
+        Pieza = null!;
+        MaterialSeleccionado = null!;
+        EncargoImpresion = new EncargoImpresion();
+        Pieza = new Pieza3D();
+        MaterialSeleccionado = new Material();
     }
     public LineaEncargo(int cantidad, decimal precioUnidad, decimal subtotal)
-    {
+    :this(){
         Cantidad = cantidad;
         PrecioUnidad = precioUnidad;
         Subtotal = subtotal;
@@ -31,13 +37,13 @@ public class LineaEncargo
 
     //Relaciones
     public int EncargoImpresionId { get; set; }
-    public EncargoImpresion EncargoImpresion { get; set; } = null!;
+    public EncargoImpresion EncargoImpresion { get; set; }
 
     public int Pieza3DId { get; set; }
     [DeleteBehavior(DeleteBehavior.NoAction)]
-    public Pieza3D Pieza { get; set; } = null!;
+    public Pieza3D Pieza { get; set; }
 
     public int MaterialId { get; set; }
     [DeleteBehavior(DeleteBehavior.NoAction)]
-    public Material MaterialSeleccionado { get; set; } = null!;
+    public Material MaterialSeleccionado { get; set; }
 }

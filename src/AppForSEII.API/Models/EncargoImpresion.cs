@@ -7,11 +7,16 @@ namespace AppForSEII.API.Models;
     {
         public EncargoImpresion()
         {
-            
+            NombreCliente = string.Empty;
+            ApellidosCliente = string.Empty;
+            DireccionEnvio = string.Empty;
+            NumeroTelefono = string.Empty;
+            LineasEncargo = new List<LineaEncargo>();
+            LineasEncargo = new List<LineaEncargo>();
         }
 
         public EncargoImpresion(DateTime fechaEncargo, string nombreCliente, string apellidosCliente, string direccionEnvio, string numeroTelefono, string? descripcion, decimal precioTotal, MetodoPago metodoPago)
-        {
+        :this(){
             FechaEncargo = fechaEncargo;
             NombreCliente = nombreCliente;
             ApellidosCliente = apellidosCliente;
@@ -27,19 +32,19 @@ namespace AppForSEII.API.Models;
 
         [Required]
         [StringLength(50)]
-        public string NombreCliente { get; set; } = string.Empty;
+        public string NombreCliente { get; set; }
 
         [Required]
         public DateTime FechaEncargo { get; set; }
 
         [Required]
-        public string ApellidosCliente { get; set; } = string.Empty;
+        public string ApellidosCliente { get; set; }
 
         [Required]
-        public string DireccionEnvio { get; set; } = string.Empty;
+        public string DireccionEnvio { get; set; }
 
         [Required]
-        public string NumeroTelefono { get; set; } = string.Empty;
+        public string NumeroTelefono { get; set; }
 
         public string? Descripcion { get; set; }
 
@@ -51,5 +56,5 @@ namespace AppForSEII.API.Models;
         public MetodoPago MetodoPago { get; set; }
 
         // Relaciones
-        public IList<LineaEncargo> LineasEncargo { get; set; } = new List<LineaEncargo>();
+        public IList<LineaEncargo> LineasEncargo { get; set; }
     }
