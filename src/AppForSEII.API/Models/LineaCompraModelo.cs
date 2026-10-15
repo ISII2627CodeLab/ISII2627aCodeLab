@@ -2,6 +2,21 @@ namespace AppForSEII.API.Models
 {
     public class LineaCompraModelo
     {
+public LineaCompraModelo()
+        {
+            Compra = new CompraModelo3D();
+            Modelo = new Modelo3D();
+        }
+
+        public LineaCompraModelo(int cantidadLicencias, decimal precioUnidad, CompraModelo3D compra, Modelo3D modelo)
+        {
+            CantidadLicencias = cantidadLicencias;
+            PrecioUnidad = precioUnidad;
+            Subtotal = cantidadLicencias * precioUnidad;
+            Compra = compra;
+            Modelo = modelo;
+        }
+
         [Key]
         public int Id { get; set; }
 
@@ -18,25 +33,13 @@ namespace AppForSEII.API.Models
         public int CompraModelo3DId { get; set; }
 
         [ForeignKey(nameof(CompraModelo3DId))]
-        public CompraModelo3D Compra { get; set; } = null!;
+        public CompraModelo3D Compra { get; set; }
 
         // Relación con el modelo 3d
         public int Modelo3DId { get; set; }
 
         [ForeignKey(nameof(Modelo3DId))]
-        public Modelo3D Modelo { get; set; } = null!;
+        public Modelo3D Modelo { get; set; }
 
-        public LineaCompraModelo()
-        {
-        }
-
-        public LineaCompraModelo(int cantidadLicencias, decimal precioUnidad, CompraModelo3D compra, Modelo3D modelo)
-        {
-            CantidadLicencias = cantidadLicencias;
-            PrecioUnidad = precioUnidad;
-            Subtotal = cantidadLicencias * precioUnidad;
-            Compra = compra;
-            Modelo = modelo;
-        }
     }
 }

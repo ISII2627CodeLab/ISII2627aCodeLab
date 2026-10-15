@@ -2,41 +2,15 @@ namespace AppForSEII.API.Models
 {
     public class CompraModelo3D
     {
-        [Key]
-        public int Id { get; set; }
-
-        public DateTime FechaCompra { get; set; }
-
-        [Required]
-        public string NombreCliente { get; set; } = string.Empty;
-
-        [Required]
-        public string ApellidosCliente { get; set; } = string.Empty;
-
-        [Required]
-        [EmailAddress]
-        public string CorreoElectronico { get; set; } = string.Empty;
-
-        [Required]
-        public string DireccionFacturacion { get; set; } = string.Empty;
-
-        public string? Descripcion { get; set; }
-
-        [Precision(10, 2)]
-        public decimal PrecioTotal { get; set; }
-
-        [Required]
-        public MetodoPago MetodoPago { get; set; }
-
-        [Required]
-        public string ClienteId { get; set; } = string.Empty;
-
-        [ForeignKey(nameof(ClienteId))]
-        [DeleteBehavior(DeleteBehavior.NoAction)]
-        public Cliente Cliente { get; set; } = null!;
-
         public CompraModelo3D()
         {
+            NombreCliente = string.Empty;
+            ApellidosCliente = string.Empty;
+            CorreoElectronico = string.Empty;
+            DireccionFacturacion = string.Empty;
+            ClienteId = string.Empty;
+            Cliente = new Cliente();
+            
         }
 
         public CompraModelo3D(DateTime fechaCompra, string nombreCliente, string apellidosCliente,
@@ -53,6 +27,41 @@ namespace AppForSEII.API.Models
             PrecioTotal = precioTotal;
             MetodoPago = metodoPago;
             Cliente = cliente;
+            ClienteId = cliente.Id;
         }
+        
+        [Key]
+        public int Id { get; set; }
+
+        public DateTime FechaCompra { get; set; }
+
+        [Required]
+        public string NombreCliente { get; set; }
+        [Required]
+        public string ApellidosCliente { get; set; }
+
+        [Required]
+        [EmailAddress]
+        public string CorreoElectronico { get; set; }
+
+        [Required]
+        public string DireccionFacturacion { get; set; }
+
+        public string? Descripcion { get; set; }
+
+        [Precision(10, 2)]
+        public decimal PrecioTotal { get; set; }
+
+        [Required]
+        public MetodoPago MetodoPago { get; set; }
+
+        [Required]
+        public string ClienteId { get; set; }
+
+        [ForeignKey(nameof(ClienteId))]
+        [DeleteBehavior(DeleteBehavior.NoAction)]
+        public Cliente Cliente { get; set; }
+
+        
     }
 }
