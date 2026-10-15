@@ -12,18 +12,22 @@ namespace AppForSEII.API.Data
             List<string> rolesNames = new List<string> { "Administrator", "Employee", "Customer" };
 
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            try {
+            try
+            {
                 SeedRoles(roleManager, rolesNames);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 logger.LogError(ex, "An error occurred seeding the roles in the Database.");
             }
 
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            try {
+            try
+            {
                 SeedUsers(userManager, rolesNames);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 logger.LogError(ex, "An error occurred seeding the Users in the Database.");
             }
             try
@@ -56,7 +60,6 @@ namespace AppForSEII.API.Data
                     IdentityResult roleResult = roleManager.CreateAsync(role).Result;
                 }
             }
-
         }
 
         public static void SeedUsers(UserManager<ApplicationUser> userManager, List<string> roles) {
@@ -86,6 +89,7 @@ namespace AppForSEII.API.Data
 
                 if (result.IsCompletedSuccessfully) {
                     //customer role
+                    userManager.AddToRoleAsync(cliente, roles[2]).Wait();
                     userManager.AddToRoleAsync(cliente, roles[2]).Wait();
 
                 }
