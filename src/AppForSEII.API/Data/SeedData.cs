@@ -5,10 +5,8 @@ using Microsoft.Extensions.Logging;
 
 namespace AppForSEII.API.Data;
 
-public class SeedData
-{
-    public static void Initialize(ApplicationDbContext dbContext, IServiceProvider serviceProvider, ILogger logger)
-    {
+public class SeedData{
+    public static void Initialize(ApplicationDbContext dbContext, IServiceProvider serviceProvider, ILogger logger){
         List<string> rolesNames = new List<string> { "Administrator", "Employee", "Customer" };
 
         var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
@@ -19,6 +17,7 @@ public class SeedData
         try { SeedUsers(userManager, rolesNames); }
         catch (Exception ex) { logger.LogError(ex, "An error occurred seeding the Users in the Database."); }
 
+        // 1. Poner el Seed LicenciaModelo3D ANTES que el de Modelo3D (Cambio propuesto por el profesor)
         try { SeedLicenciasModelo3D(dbContext); }
         catch (Exception ex) { logger.LogError(ex, "An error occurred seeding the LicenciasModelo3D."); }
 
@@ -28,88 +27,81 @@ public class SeedData
         try { SeedMaterialesYPiezas(dbContext); }
         catch (Exception ex) { logger.LogError(ex, "An error occurred seeding Materials and Piezas3D."); }
 
+        // 2. Añadir Impresora3D a la inicialización (Cambio propuesto por el profesor)
         try { SeedImpresora3D(dbContext); }
         catch (Exception ex) { logger.LogError(ex, "An error occurred seeding Impresoras3D."); }
 
         try { SeedAccesorios(dbContext); }
         catch (Exception ex) { logger.LogError(ex, "An error occurred seeding Accesorios."); }
 
-        // Operaciones dependientes de los clientes y las entidades anteriores
-        try
-        {
+        // Operaciones dependientes de los clientes y las entidades anteriormente creadas
+        try{
             var cliente = dbContext.Users.OfType<Cliente>().FirstOrDefault(u => u.UserName == "peter@uclm.es");
-            if (cliente != null)
-            {
+            if (cliente != null){
                 SeedEncargoImpresion(dbContext, cliente);
                 SeedReservaImpresora(dbContext, cliente);
                 SeedCompraModelo3D(dbContext, cliente);
                 SeedCompraAccesorios(dbContext, cliente);
             }
         }
-        catch (Exception ex)
-        {
+        catch (Exception ex){
             logger.LogError(ex, "An error occurred seeding customer transactions (Encargos, Reservas, Compras).");
         }
     }
 
-    public static void SeedRoles(RoleManager<IdentityRole> roleManager, List<string> roles)
-    {
-        foreach (string roleName in roles)
-        {
-            if (!roleManager.RoleExistsAsync(roleName).Result)
-            {
+    public static void SeedRoles(RoleManager<IdentityRole> roleManager, List<string> roles){
+        foreach (string roleName in roles){
+            if (!roleManager.RoleExistsAsync(roleName).Result){
                 IdentityRole role = new IdentityRole { Name = roleName, NormalizedName = roleName };
                 roleManager.CreateAsync(role).Wait();
             }
         }
     }
 
-    public static void SeedUsers(UserManager<ApplicationUser> userManager, List<string> roles)
-    {
-        if (userManager.FindByNameAsync("elena@uclm.es").Result == null)
-        {
+    public static void SeedUsers(UserManager<ApplicationUser> userManager, List<string> roles){
+        if (userManager.FindByNameAsync("elena@uclm.es").Result == null){
             Cliente cliente = new Cliente("1", "Elena", "Navarro Martínez", "elena@uclm.es", "Calle Cervantes 1") { EmailConfirmed = true };
             var result = userManager.CreateAsync(cliente, "Password1234%").Result;
             if (result.Succeeded) userManager.AddToRoleAsync(cliente, roles[0]).Wait();
         }
 
-        if (userManager.FindByNameAsync("peter@uclm.es").Result == null)
-        {
+        if (userManager.FindByNameAsync("peter@uclm.es").Result == null){
             Cliente cliente = new Cliente("3", "Peter", "Jackson", "peter@uclm.es", "Calle Dulcinea 2") { EmailConfirmed = true };
             var result = userManager.CreateAsync(cliente, "OtherPass12$").Result;
             if (result.Succeeded) userManager.AddToRoleAsync(cliente, roles[2]).Wait();
         }
     }
 
-    public static void SeedLicenciasModelo3D(ApplicationDbContext dbContext)
-    {
-        if (!dbContext.LicenciasModelo3D.Any())
-        {
+// 1. Poner el Seed LicenciaModelo3D ANTES que el de Modelo3D (Cambio propuesto por el profesor)
+    public static void SeedLicenciasModelo3D(ApplicationDbContext dbContext){
+        // 4. Hacer == a un nombre en el if y no usar id fijos (Cambio propuesto por el profesor)
+        if (dbContext.LicenciasModelo3D.FirstOrDefault(l => l.Nombre == "Licencia Estándar") == null){
+            // 4. No declarar el id manualmente
             dbContext.LicenciasModelo3D.Add(new LicenciaModelo3D("Licencia Estándar", DateTime.Now.AddYears(1)));
             dbContext.SaveChanges();
         }
     }
 
-    public static void SeedModelos3D(ApplicationDbContext dbContext)
-    {
-        if (!dbContext.Modelos3D.Any())
-        {
+    public static void SeedModelos3D(ApplicationDbContext dbContext){
+        // 4. Hacer == a un nombre en el if y no usar id fijos (Cambio propuesto por el profesor)
+        if (dbContext.Modelos3D.FirstOrDefault(m => m.Nombre == "Robot") == null){
             var licencia = dbContext.LicenciasModelo3D.FirstOrDefault(l => l.Nombre == "Licencia Estándar");
             if (licencia == null) return; 
 
+            // 4. No declarar el id manualmente
             dbContext.Modelos3D.AddRange(
                 new Modelo3D("Robot", "Personajes", FormatoModelo3D.OBJ, 15m, licencia),
                 new Modelo3D("Castillo", "Arquitectura", FormatoModelo3D.STL, 20m, licencia),
                 new Modelo3D("Nave Espacial", "Vehículos", FormatoModelo3D.TresMF, 30.0m, licencia)
             );
+            
+            // 3. Añadir SaveChanges en Modelos3D
             dbContext.SaveChanges();
         }
     }
 
-    public static void SeedMaterialesYPiezas(ApplicationDbContext dbContext)
-    {
-        if (!dbContext.Materiales.Any())
-        {
+    public static void SeedMaterialesYPiezas(ApplicationDbContext dbContext){
+        if (dbContext.Materiales.FirstOrDefault(m => m.Nombre == "PLA Premium") == null){
             dbContext.Materiales.AddRange(
                 new Material("PLA Premium", 0.05m, 5000m),
                 new Material("PETG Resistente", 0.08m, 3000m)
@@ -117,8 +109,7 @@ public class SeedData
             dbContext.SaveChanges();
         }
 
-        if (!dbContext.Piezas3D.Any())
-        {
+        if (dbContext.Piezas3D.FirstOrDefault(p => p.Nombre == "Soporte Auriculares") == null){
             var pla = dbContext.Materiales.FirstOrDefault(m => m.Nombre == "PLA Premium");
             var petg = dbContext.Materiales.FirstOrDefault(m => m.Nombre == "PETG Resistente");
             if(pla == null || petg == null) return;
@@ -131,10 +122,8 @@ public class SeedData
         }
     }
 
-    public static void SeedImpresora3D(ApplicationDbContext dbContext)
-    {
-        if (!dbContext.Impresoras3Ds.Any())
-        {
+    public static void SeedImpresora3D(ApplicationDbContext dbContext){
+        if (dbContext.Impresoras3Ds.FirstOrDefault(i => i.Nombre == "Prusa") == null){
             dbContext.Impresoras3Ds.AddRange(
                 new Impresora3D("Prusa", "i3 MK3S+", TipoImpresora.Filamento, "Impresora 3D de gran formato.", 0.15m),
                 new Impresora3D("Elegoo Mars", "2 Pro", TipoImpresora.Resina, "Impresora 3D de resina.", 0.20m)
@@ -143,10 +132,8 @@ public class SeedData
         }
     }
 
-    public static void SeedAccesorios(ApplicationDbContext dbContext)
-    {
-        if (!dbContext.Accesorios.Any())
-        {
+    public static void SeedAccesorios(ApplicationDbContext dbContext){
+        if (dbContext.Accesorios.FirstOrDefault(a => a.Nombre == "Boquilla 0.4mm") == null){
             dbContext.Accesorios.AddRange(
                 new Accesorio("Boquilla 0.4mm", CategoriaAccesorio.BOQUILLAS, "Prusa i3", 50, 5.99m),
                 new Accesorio("Kit de limpieza", CategoriaAccesorio.KITS_LIMPIEZA, "Universal", 20, 15.50m)
@@ -155,18 +142,15 @@ public class SeedData
         }
     }
 
-    public static void SeedEncargoImpresion(ApplicationDbContext dbContext, Cliente cliente)
-    {
-        if (!dbContext.EncargosImpresion.Any())
-        {
+    public static void SeedEncargoImpresion(ApplicationDbContext dbContext, Cliente cliente){
+        if (!dbContext.EncargosImpresion.Any()){
             var pieza = dbContext.Piezas3D.FirstOrDefault();
             var material = dbContext.Materiales.FirstOrDefault();
             if (pieza == null || material == null) return;
 
             var encargo = new EncargoImpresion(DateTime.Now, cliente.Name ?? "Peter", cliente.Surname ?? "Jackson", "Avda. España s/n, Albacete", "600123456", "Encargo de prueba", 15.0m, MetodoPago.Bizum);
 
-            var linea = new LineaEncargo(1, 15.0m, 15.0m)
-            {
+            var linea = new LineaEncargo(1, 15.0m, 15.0m){
                 Pieza = pieza,
                 Pieza3DId = pieza.Id,
                 MaterialSeleccionado = material,
@@ -180,15 +164,12 @@ public class SeedData
         }
     }
 
-    public static void SeedReservaImpresora(ApplicationDbContext dbContext, Cliente cliente)
-    {
-        if (!dbContext.ReservaImpresora.Any()) 
-        {
+    public static void SeedReservaImpresora(ApplicationDbContext dbContext, Cliente cliente){
+        if (!dbContext.ReservaImpresora.Any()){
             var impresora = dbContext.Impresoras3Ds.FirstOrDefault();
             if (impresora == null) return;
 
-            var reserva = new ReservaImpresora
-            {
+            var reserva = new ReservaImpresora{
                 FechaReserva = DateTime.Now,
                 NombreCliente = cliente.Name ?? "Peter",
                 ApellidosCliente = cliente.Surname ?? "Jackson",
@@ -199,8 +180,7 @@ public class SeedData
                 Cliente = cliente
             };
 
-            reserva.LineaReservas.Add(new LineaReserva 
-            { 
+            reserva.LineaReservas.Add(new LineaReserva{ 
                 TiempoReserva = TiempoReserva.DosHoras, 
                 PrecioSubtotal = 10.0m, 
                 Impresora3DId = impresora.Id,
@@ -212,10 +192,8 @@ public class SeedData
         }
     }
 
-    public static void SeedCompraModelo3D(ApplicationDbContext dbContext, Cliente cliente)
-    {
-        if (!dbContext.ComprasModelo3D.Any())
-        {
+    public static void SeedCompraModelo3D(ApplicationDbContext dbContext, Cliente cliente){
+        if (!dbContext.ComprasModelo3D.Any()){
             var modelo = dbContext.Modelos3D.FirstOrDefault();
             if (modelo == null) return;
 
@@ -230,10 +208,8 @@ public class SeedData
         }
     }
 
-    public static void SeedCompraAccesorios(ApplicationDbContext dbContext, Cliente cliente)
-    {
-        if (!dbContext.ComprasAccesorios.Any())
-        {
+    public static void SeedCompraAccesorios(ApplicationDbContext dbContext, Cliente cliente){
+        if (!dbContext.ComprasAccesorios.Any()){
             var accesorio = dbContext.Accesorios.FirstOrDefault();
             if (accesorio == null) return;
 
