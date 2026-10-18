@@ -110,9 +110,10 @@ namespace AppForSEII.API.Data;
                 }
             }
         }
-        public static void SeedLicenciasModelo3D(ApplicationDbContext dbContext)
+        
+        public static void SeedLicenciasModelo3D(ApplicationDbContext dbcontext)
         {
-            if (dbContext.LicenciasModelo3D.FirstOrDefault(l => l.Id == 1) == null)
+            if (dbcontext.LicenciasModelo3D.FirstOrDefault(l => l.Id == 1) == null)
             {
                 var licencia = new LicenciaModelo3D
                 {
@@ -120,13 +121,13 @@ namespace AppForSEII.API.Data;
                     Nombre = "Licencia Estándar",
                     FechaExpiracion = DateTime.Now.AddYears(1)
                 };
-                dbContext.LicenciasModelo3D.Add(licencia);
+                dbcontext.LicenciasModelo3D.Add(licencia);
             }
-            dbContext.SaveChanges();
+            dbcontext.SaveChanges();
         }
-        public static void SeedModelos3D(ApplicationDbContext dbContext)
+        public static void SeedModelos3D(ApplicationDbContext dbcontext)
         {
-            if (dbContext.Modelos3D.FirstOrDefault(m => m.Nombre == "Robot") == null)
+            if (dbcontext.Modelos3D.FirstOrDefault(m => m.Nombre == "Robot") == null)
             {
                 var modelo = new Modelo3D
                 {   
@@ -136,10 +137,10 @@ namespace AppForSEII.API.Data;
                     Formato = FormatoModelo3D.OBJ,
                     Precio = 15
                 };
-                dbContext.Modelos3D.Add(modelo);
+                dbcontext.Modelos3D.Add(modelo);
             }
-        }
 
+        }
         public static void SeedMaterialesYPiezas(ApplicationDbContext dbContext)
         {
             // 1. Seed Materiales
@@ -213,33 +214,6 @@ namespace AppForSEII.API.Data;
                 }
 
                 dbContext.EncargosImpresion.Add(encargo);
-            }
-
-            dbContext.SaveChanges();
-            if (dbContext.Modelos3D.FirstOrDefault(m => m.Nombre == "Castillo") == null)
-            {
-                var modelo = new Modelo3D
-                {
-                    Id = 2,
-                    Nombre = "Castillo",
-                    Categoria = "Arquitectura",
-                    Formato = FormatoModelo3D.STL,
-                    Precio = 20
-                };
-                dbContext.Modelos3D.Add(modelo);
-            }
-
-            if (dbContext.Modelos3D.FirstOrDefault(m => m.Nombre == "Nave Espacial") == null)
-            {
-                var modelo = new Modelo3D
-                {
-                    Id = 3,
-                    Nombre = "Nave Espacial",
-                    Categoria = "Vehículos",
-                    Formato = FormatoModelo3D.TresMF,
-                    Precio = 30.0m
-                };
-                dbContext.Modelos3D.Add(modelo);
             }
 
             dbContext.SaveChanges();
