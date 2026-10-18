@@ -4,7 +4,6 @@ namespace AppForSEII.API.Models
     {
         public Cliente()
         {
-            DireccionFacturacion = string.Empty;
         }
         public Cliente(string id, string name, string surname, string userName, string direccionFacturacion)
         : base(id, name, surname, userName)
