@@ -7,9 +7,10 @@ namespace AppForSEII.API.Models
         public LicenciaModelo3D()
         {
             Nombre = string.Empty;
+            Modelos3D = new List<Modelo3D>();
         }
 
-        public LicenciaModelo3D(string nombre, DateTime fechaExpiracion)
+        public LicenciaModelo3D(string nombre, DateTime fechaExpiracion) : this()
         {
             Nombre = nombre;
             FechaExpiracion = fechaExpiracion;
@@ -26,5 +27,7 @@ namespace AppForSEII.API.Models
         [Required]
         public DateTime FechaExpiracion { get; set; }
 
+        // Relación 1 a N con los modelos 3D
+        public ICollection<Modelo3D> Modelos3D { get; set; }
     }
 }

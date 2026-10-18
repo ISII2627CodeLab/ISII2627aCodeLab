@@ -6,17 +6,20 @@ namespace AppForSEII.API.Models
         {
             Nombre = string.Empty;
             Categoria = string.Empty;
-            Licencia = new LicenciaModelo3D();            
+            Licencia = null!;
+            Licencia= new LicenciaModelo3D();
+            LineasCompra = new List<LineaCompraModelo>();
         }
 
         public Modelo3D(string nombre, string categoria, FormatoModelo3D formato,
-                        decimal precio, LicenciaModelo3D licencia)
+                        decimal precio, LicenciaModelo3D licencia) : this()
         {
             Nombre = nombre;
             Categoria = categoria;
             Formato = formato;
             Precio = precio;
             Licencia = licencia;
+            LicenciaModelo3DId = licencia.Id;
         }
 
         [Key]
@@ -47,6 +50,7 @@ namespace AppForSEII.API.Models
         [ForeignKey(nameof(LicenciaModelo3DId))]
         public LicenciaModelo3D Licencia { get; set; }
 
-
+        // Relación 1 a N con las líneas de compra
+        public ICollection<LineaCompraModelo> LineasCompra { get; set; }
     }
 }
