@@ -2,18 +2,35 @@ namespace AppForSEII.API.Models
 {
     public class Modelo3D
     {
+        public Modelo3D()
+        {
+            Nombre = string.Empty;
+            Categoria = string.Empty;
+            Licencia = new LicenciaModelo3D();            
+        }
+
+        public Modelo3D(string nombre, string categoria, FormatoModelo3D formato,
+                        decimal precio, LicenciaModelo3D licencia)
+        {
+            Nombre = nombre;
+            Categoria = categoria;
+            Formato = formato;
+            Precio = precio;
+            Licencia = licencia;
+        }
+
         [Key]
         public int Id { get; set; }
 
         [Required(ErrorMessage = "El nombre del modelo es obligatorio.")]
         [StringLength(100, MinimumLength = 1,
             ErrorMessage = "El nombre debe tener entre 1 y 100 caracteres.")]
-        public string Nombre { get; set; } = string.Empty;
+        public string Nombre { get; set; }
 
         [Required(ErrorMessage = "La categoría es obligatoria.")]
         [StringLength(50, MinimumLength = 1,
             ErrorMessage = "La categoría debe tener entre 1 y 50 caracteres.")]
-        public string Categoria { get; set; } = string.Empty;
+        public string Categoria { get; set; }
 
         [Required]
         public FormatoModelo3D Formato { get; set; }
@@ -28,20 +45,8 @@ namespace AppForSEII.API.Models
         public int LicenciaModelo3DId { get; set; }
 
         [ForeignKey(nameof(LicenciaModelo3DId))]
-        public LicenciaModelo3D Licencia { get; set; } = null!;
+        public LicenciaModelo3D Licencia { get; set; }
 
-        public Modelo3D()
-        {
-        }
 
-        public Modelo3D(string nombre, string categoria, FormatoModelo3D formato,
-                        decimal precio, LicenciaModelo3D licencia)
-        {
-            Nombre = nombre;
-            Categoria = categoria;
-            Formato = formato;
-            Precio = precio;
-            Licencia = licencia;
-        }
     }
 }
