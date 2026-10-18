@@ -5,6 +5,9 @@ public class Pieza3D
 
     public Pieza3D()
     {
+        Nombre = string.Empty;
+        Descripcion = string.Empty;
+        LineasEncargo = new List<LineaEncargo>();
     }
 
     public Pieza3D(string nombre, string descripcion, double pesoGramos, decimal precioEstimado)
@@ -13,6 +16,7 @@ public class Pieza3D
         Descripcion = descripcion;
         PesoGramos = pesoGramos;
         PrecioEstimado = precioEstimado;
+        LineasEncargo = new List<LineaEncargo>();
     }
 
     
@@ -21,11 +25,11 @@ public class Pieza3D
 
     [Required]
     [StringLength(25, ErrorMessage = "El nombre no puede superar los 25 caracteres.", MinimumLength = 2)]
-    public string Nombre { get; set; } = string.Empty;
+    public string Nombre { get; set; }
 
     [Required]
     [StringLength(100, ErrorMessage = "La descripcion no puede tener más de 100 caracteres.")]
-    public string Descripcion { get; set; } = string.Empty;
+    public string Descripcion { get; set; }
 
     [Required]
     [Range(1, 1000, ErrorMessage = "El peso debe estar entre 1 y 1000 gramos.")]
@@ -39,5 +43,5 @@ public class Pieza3D
     // Relaciones
     public int MaterialId { get; set; }
     public Material? Material { get; set; }
-    public IList<LineaEncargo> LineasEncargo { get; set; } = new List<LineaEncargo>();
+    public IList<LineaEncargo> LineasEncargo { get; set; }
 }

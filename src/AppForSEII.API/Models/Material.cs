@@ -7,6 +7,7 @@ public class Material
 {
     public Material()
     {
+        Nombre = string.Empty;
         Piezas3D = new HashSet<Pieza3D>();
         LineasEncargo = new List<LineaEncargo>();
     }
@@ -24,7 +25,7 @@ public class Material
 
     [Required]
     [StringLength(50)]
-    public string Nombre { get; set; } = string.Empty;
+    public string Nombre { get; set; }
 
     [Required]
     [Range(0.01, 1000.00)]
