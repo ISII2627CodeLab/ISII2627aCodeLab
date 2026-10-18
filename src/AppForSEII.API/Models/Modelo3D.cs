@@ -7,7 +7,6 @@ namespace AppForSEII.API.Models
             Nombre = string.Empty;
             Categoria = string.Empty;
             Licencia = null!;
-            Licencia= new LicenciaModelo3D();
             LineasCompra = new List<LineaCompraModelo>();
         }
 
