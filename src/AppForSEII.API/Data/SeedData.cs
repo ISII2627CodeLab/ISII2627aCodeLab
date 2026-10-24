@@ -162,14 +162,14 @@ namespace AppForSEII.API.Data;
 
             if (dbContext.Piezas3D.FirstOrDefault(p => p.Nombre == "Soporte Auriculares") == null)
             {
-                var pieza = new Pieza3D("Soporte Auriculares", "HerramientasYAccesorios", 150.0, 15.0m);
+                var pieza = new Pieza3D("Soporte Auriculares", "Soporte para auriculares", 150.0, 15.0m, CategoriaPieza.HerramientasYAccesorios);
                 pieza.Material = pla;
                 dbContext.Piezas3D.Add(pieza);
             }
 
             if (dbContext.Piezas3D.FirstOrDefault(p => p.Nombre == "Figura Dragon") == null)
             {
-                var pieza = new Pieza3D("Figura Dragon", "Decoracion", 80.0, 10.0m);
+                var pieza = new Pieza3D("Figura Dragon", "Figura decorativa de dragón", 80.0, 10.0m, CategoriaPieza.Decoracion);
                 pieza.Material = petg;
                 dbContext.Piezas3D.Add(pieza);
             }
