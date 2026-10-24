@@ -8,14 +8,18 @@ public class Pieza3D
         Nombre = string.Empty;
         Descripcion = string.Empty;
         LineasEncargo = new List<LineaEncargo>();
+        MaterialesValidos = new HashSet<Material>();
     }
 
-    public Pieza3D(string nombre, string descripcion, double pesoGramos, decimal precioEstimado)
+    public Pieza3D(string nombre, string descripcion, double pesoGramos, decimal precioEstimado, CategoriaPieza categoria)
     {
         Nombre = nombre;
         Descripcion = descripcion;
         PesoGramos = pesoGramos;
         PrecioEstimado = precioEstimado;
+        LineasEncargo = new List<LineaEncargo>();
+        Categoria = categoria;
+        MaterialesValidos = new HashSet<Material>();
         LineasEncargo = new List<LineaEncargo>();
     }
 
@@ -39,9 +43,11 @@ public class Pieza3D
     [Precision(5, 2)]
     [Range(0.01, 999.99, ErrorMessage = "El precio debe ser mayor a 0.")]
     public decimal PrecioEstimado { get; set; }
+    public CategoriaPieza Categoria { get; set; }
 
     // Relaciones
     public int MaterialId { get; set; }
     public Material? Material { get; set; }
     public IList<LineaEncargo> LineasEncargo { get; set; }
+    public ICollection<Material> MaterialesValidos { get; set; }
 }
