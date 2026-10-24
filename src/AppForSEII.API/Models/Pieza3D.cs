@@ -12,7 +12,7 @@ public class Pieza3D
     }
 
     public Pieza3D(string nombre, string descripcion, double pesoGramos, decimal precioEstimado, CategoriaPieza categoria)
-    {
+    : this(){
         Nombre = nombre;
         Descripcion = descripcion;
         PesoGramos = pesoGramos;
