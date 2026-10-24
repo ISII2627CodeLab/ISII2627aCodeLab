@@ -17,10 +17,9 @@ public class Pieza3D
         Descripcion = descripcion;
         PesoGramos = pesoGramos;
         PrecioEstimado = precioEstimado;
-        LineasEncargo = new List<LineaEncargo>();
         Categoria = categoria;
-        MaterialesValidos = new HashSet<Material>();
-        LineasEncargo = new List<LineaEncargo>();
+        
+        
     }
 
     
