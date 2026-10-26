@@ -224,11 +224,12 @@ namespace AppForSEII.API.Data;
             {
                 var impresora = new Impresora3D
                 (   
-                  "crusa",
-        "CR-10",
-        TipoImpresora.Filamento,
-       "Impresora 3D de gran formato con una superficie de impresión de 300 x 300 x 400 mm. Ideal para proyectos grandes y detallados.",
-        0.15m
+                 "crusa",
+            "CR-10",
+            TipoImpresora.Filamento,
+            "Impresora 3D de gran formato con una superficie de impresión de 300 x 300 x 400 mm. Ideal para proyectos grandes y detallados.",
+            0.15m,
+            10.0m
                 );
                 dbContext.Impresoras3Ds.Add(impresora);
             }
@@ -237,11 +238,12 @@ namespace AppForSEII.API.Data;
             {
                 var impresora = new Impresora3D
                 (
-                    "Elegoo Mars 2 Pro",
-                    "Elegoo Mars 2 Pro",
-                    TipoImpresora.Resina,
-                    "Impresora 3D de resina con una resolución de 0.05 mm y una superficie de impresión de 129 x 80 x 160 mm. Ideal para modelos detallados y miniaturas.",
-                    0.20m
+                   "Elegoo Mars 2 Pro",
+                "Elegoo Mars 2 Pro",
+                TipoImpresora.Resina,
+                "Impresora 3D de resina con una resolución de 0.05 mm y una superficie de impresión de 129 x 80 x 160 mm. Ideal para modelos detallados y miniaturas.",
+                0.20m,
+                12.0m
                 );
                 dbContext.Impresoras3Ds.Add(impresora);
             }
@@ -251,10 +253,11 @@ namespace AppForSEII.API.Data;
                 var impresora = new Impresora3D
                 (
                     "Nave Espacial",
-                    "Nave Espacial",
-                    TipoImpresora.Resina,
-                    "Impresora 3D de resina con una resolución de 0.05 mm y una superficie de impresión de 129 x 80 x 160 mm. Ideal para modelos detallados y miniaturas.",
-                    30.0m
+             "Nave Espacial",
+                TipoImpresora.Resina,
+                "Impresora 3D de resina con una resolución de 0.05 mm y una superficie de impresión de 129 x 80 x 160 mm. Ideal para modelos detallados y miniaturas.",
+                30.0m,
+                15.0m 
                 );
                 dbContext.Impresoras3Ds.Add(impresora);
             }

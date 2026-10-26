@@ -11,13 +11,14 @@ public class Impresora3D
 
         
     }
-    public Impresora3D(string nombre, string modelo, TipoImpresora tipo, string descripcion, decimal precioKilovatioHora)
+    public Impresora3D(string nombre, string modelo, TipoImpresora tipo, string descripcion, decimal precioKilovatioHora, decimal precioReserva)
     : this(){
         Nombre = nombre;
         Modelo = modelo;
         Tipo = tipo;
         Descripcion = descripcion;
         PrecioKilovatioHora = precioKilovatioHora;
+        PrecioReserva = precioReserva;
     } 
     [Key]
     public int Id { get; set; }
@@ -37,5 +38,8 @@ public class Impresora3D
     [Required]
     public decimal PrecioKilovatioHora { get; set; }
 
+    [Required]
+    public decimal PrecioReserva { get; set; }
     public IList<LineaReserva> LineaReservas { get; set; }
+    
 }
