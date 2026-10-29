@@ -25,7 +25,7 @@ namespace AppForSEII.API.Controllers
             _logger = logger;
         }
 
-        // --- Método de prueba original ---
+        //Método de prueba original que esta en el enunciado del seminario
         [HttpGet]
         [Route("[action]")]
         [ProducesResponseType(typeof(decimal), (int)HttpStatusCode.OK)]
@@ -41,11 +41,11 @@ namespace AppForSEII.API.Controllers
             return Ok(result);
         }
 
-        //Método de Comprar Accesorios ---
-        /// Obtiene el catálogo de accesorios disponibles con opción de filtrado por nombre y categoría.
-        /// <param name="nombre">Nombre del accesorio (filtro opcional)</param>
-        /// <param name="categoria">Categoría del accesorio (filtro opcional)</param>
-        /// <returns>Lista de accesorios en formato DTO</returns>
+        //Método de Comprar Accesorios
+        ///Obtiene el catálogo de accesorios disponibles con opción de filtrado por nombre y categoría.
+        ///<param name="nombre">Nombre del accesorio (filtro opcional)</param>
+        ///<param name="categoria">Categoria del accesorio (filtro opcional)</param>
+        ///<returns>Lista de accesorios en formato DTO</returns>
         [HttpGet]
         [Route("[action]")]
         [ProducesResponseType(typeof(IList<AccesorioDTO>), (int)HttpStatusCode.OK)]
@@ -58,12 +58,12 @@ namespace AppForSEII.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            // Filtrado dinámico LINQ según los parámetros
+            // Filtrado de losparámetros
             var accesoriosQuery = _context.Accesorios
                 .Where(a => (nombre == null || a.Nombre.Contains(nombre))
                          && (categoria == null || a.Categoria == categoria));
 
-            // Proyección hacia AccesorioDTO
+            // Llamada hacia AccesorioDTO
             var accesoriosDTO = await accesoriosQuery
                 .Select(a => new AccesorioDTO(
                     a.Id,
