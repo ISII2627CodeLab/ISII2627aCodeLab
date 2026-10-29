@@ -28,7 +28,7 @@ namespace AppForSEII.API.Controllers
                 .Where(p => (nombre == null || p.Nombre.Contains(nombre))
                          && (categoria == null || p.Categoria.ToString().Contains(categoria)))
                 .OrderBy(p => p.Nombre)
-                .Select(p => new Pieza3DSelectDTO(p.Id, p.Nombre, p.PrecioEstimado))
+                .Select(p => new Pieza3DSelectDTO(p.Id, p.Nombre, p.Descripcion, p.PesoGramos, p.PrecioEstimado, p.Categoria, p.Material != null ? p.Material.Nombre : "Sin material"))
                 .ToListAsync();
          
             return Ok(piezas);
