@@ -12,7 +12,6 @@ namespace AppForSEII.API.Models;
             DireccionEnvio = string.Empty;
             NumeroTelefono = string.Empty;
             LineasEncargo = new List<LineaEncargo>();
-            LineasEncargo = new List<LineaEncargo>();
         }
 
         public EncargoImpresion(DateTime fechaEncargo, string nombreCliente, string apellidosCliente, string direccionEnvio, string numeroTelefono, string? descripcion, decimal precioTotal, MetodoPago metodoPago)
@@ -36,16 +35,16 @@ namespace AppForSEII.API.Models;
 
         [Required]
         [StringLength(100)]
-        public string ApellidosCliente { get; set; } = string.Empty;
+        public string ApellidosCliente { get; set; }
 
         [Required]
         public DateTime FechaEncargo { get; set; }
 
         [Required]
-        public string DireccionEnvio { get; set; } = string.Empty;
+        public string DireccionEnvio { get; set; }
 
         [Required]
-        public string NumeroTelefono { get; set; } = string.Empty;
+        public string NumeroTelefono { get; set; }
 
         public string? Descripcion { get; set; }
 

@@ -36,6 +36,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
     public DbSet<LineaReserva> LineasReservas { get; set; }
 
-    public DbSet<ReservaImpresora> ReservaImpresora { get; set; }
+    public DbSet<ReservaImpresora> ReservaImpresoras { get; set; }
    
 }
