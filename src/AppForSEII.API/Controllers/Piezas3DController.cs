@@ -19,21 +19,42 @@ namespace AppForSEII.API.Controllers
                 _context = context;
                 _logger = logger;
             }
-        [HttpGet]
-        [Route("[action]")]
-        [ProducesResponseType(typeof(IList<Pieza3DSelectDTO>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult> GetPiezas3D(string? nombre, string? categoria)
-        {
-            var piezas = await _context.Piezas3D
-                .Where(p => (nombre == null || p.Nombre.Contains(nombre))
-                         && (categoria == null || p.Categoria.ToString().Contains(categoria)))
-                .OrderBy(p => p.Nombre)
-                .Select(p => new Pieza3DSelectDTO(p.Id, p.Nombre, p.Descripcion, p.PesoGramos, p.PrecioEstimado, p.Categoria, p.Material != null ? p.Material.Nombre : "Sin material"))
-                .ToListAsync();
-         
-            return Ok(piezas);
-        }
 
+            [HttpGet]
+            [Route("[action]")]
+            [ProducesResponseType(typeof(IList<Pieza3DSelectDTO>), (int)HttpStatusCode.OK)]
+            [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+            [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
+            public async Task<ActionResult> GetPiezas3D(string? nombre, CategoriaPieza? categoria)
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
+                var piezas = await _context.Piezas3D
+                    .Include(p => p.Material)
+                    .Where(p => (nombre == null || p.Nombre.Contains(nombre)) 
+                            && (categoria == null || p.Categoria == categoria))
+                    .OrderBy(p => p.Nombre)
+                    .Select(p => new Pieza3DSelectDTO(
+                        p.Id, 
+                        p.Nombre, 
+                        p.Descripcion, 
+                        p.PesoGramos, 
+                        p.PrecioEstimado, 
+                        p.Categoria,
+                        p.Material != null ? p.Material.Nombre : "Sin material"
+                    ))
+                    .ToListAsync();
+
+                if (piezas.Count == 0)
+                {
+                    _logger.LogInformation($"{DateTime.Now} No se han encontrado piezas 3D con los filtros especificados");
+                    return NotFound("No existen piezas 3D disponibles con los filtros seleccionados.");
+                }
+
+                return Ok(piezas);
+            }
     }
 }
