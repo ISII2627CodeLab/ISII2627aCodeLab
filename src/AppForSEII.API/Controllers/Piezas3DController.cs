@@ -33,7 +33,8 @@ namespace AppForSEII.API.Controllers
                 }
 
                 var piezas = await _context.Piezas3D
-                    .Include(p => p.Material)
+                    .Include(p => p.PiezaMaterials)
+                    .ThenInclude(pm => pm.Material)
                     .Where(p => (nombre == null || p.Nombre.Contains(nombre)) 
                             && (categoria == null || p.Categoria == categoria))
                     .OrderBy(p => p.Nombre)
@@ -44,7 +45,7 @@ namespace AppForSEII.API.Controllers
                         p.PesoGramos, 
                         p.PrecioEstimado, 
                         p.Categoria,
-                        p.Material != null ? p.Material.Nombre : "Sin material"
+                        p.PiezaMaterials.FirstOrDefault() != null ? p.PiezaMaterials.First().Material.Nombre : "Sin material"
                     ))
                     .ToListAsync();
 

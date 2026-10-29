@@ -27,6 +27,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Pieza3D> Piezas3D { get; set;}
     public DbSet<Material> Materiales { get; set; }
 
+    //añadido siguiente linea: 29-10-2026
+    public DbSet<PiezaMaterial> PiezaMaterials { get; set; }
+
 
     public DbSet<Accesorio> Accesorios { get; set; }
     public DbSet<CompraAccesorios> ComprasAccesorios { get; set; }

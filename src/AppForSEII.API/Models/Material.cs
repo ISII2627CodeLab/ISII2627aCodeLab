@@ -8,7 +8,7 @@ public class Material
     public Material()
     {
         Nombre = string.Empty;
-        Piezas3D = new HashSet<Pieza3D>();
+        PiezasMaterial = new List<PiezaMaterial>();
         LineasEncargo = new List<LineaEncargo>();
     }
 
@@ -38,7 +38,7 @@ public class Material
     public decimal StockGramos { get; set; }
 
     // Relaciones
-    public ICollection<Pieza3D> Piezas3D { get; set; }
+    public ICollection<PiezaMaterial> PiezasMaterial { get; set; }
     public ICollection<LineaEncargo> LineasEncargo { get; set; }
 
 
