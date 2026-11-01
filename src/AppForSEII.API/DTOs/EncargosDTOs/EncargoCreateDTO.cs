@@ -54,7 +54,8 @@ namespace AppForSEII.API.DTOs.EncargoDTOs
                        DireccionEnvio == otro.DireccionEnvio &&
                        NumeroTelefono == otro.NumeroTelefono &&
                        Descripcion == otro.Descripcion &&
-                       MetodoPago == otro.MetodoPago;
+                       MetodoPago == otro.MetodoPago &&
+                       LineasEncargo.SequenceEqual(otro.LineasEncargo);
             }
             return false;
         }

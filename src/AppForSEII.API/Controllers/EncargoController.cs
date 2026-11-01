@@ -20,34 +20,34 @@ namespace AppForSEII.API.Controllers
             _logger = logger;
         }
 
-        [HttpPost]
-        [ProducesResponseType(typeof(EncargoCreateDTO), (int)HttpStatusCode.Created)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<ActionResult> CreateEncargo([FromBody] EncargoCreateDTO encargoDTO)
-        {
-            if (!ModelState.IsValid)
+            [HttpPost]
+            [ProducesResponseType(typeof(EncargoDetailsDTO), (int)HttpStatusCode.Created)]
+            [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
+            public async Task<ActionResult> CreateEncargo([FromBody] EncargoCreateDTO encargoDTO)
             {
-                _logger.LogError($"{DateTime.Now} Error: El modelo del encargo no es válido.");
-                return BadRequest(ModelState);
-            }
+                if (!ModelState.IsValid)
+                {
+                    _logger.LogError($"{DateTime.Now} Error: El modelo del encargo no es válido.");
+                    return BadRequest("El modelo del encargo no es válido.");
+                }
 
-            //Fluj alternativo 5: comprobar que se ha incluido al menos una pieza
-            if (encargoDTO.LineasEncargo == null || !encargoDTO.LineasEncargo.Any())
-            {
-                return BadRequest(new { message = "Debe incluir al menos una pieza para ser impresa." });
-            }
+                //fluj alternativo 5: comprobar que se ha incluido al menos una pieza
+                if (encargoDTO.LineasEncargo == null || !encargoDTO.LineasEncargo.Any())
+                {
+                    _logger.LogError($"{DateTime.Now} Error: El encargo no contiene líneas.");
+                    return BadRequest("Debe incluir al menos una pieza para ser impresa.");
+                }
 
-            var encargo = new EncargoImpresion
-            {
-                DireccionEnvio = encargoDTO.DireccionEnvio,
-                NombreCliente = encargoDTO.NombreCliente,
-                ApellidosCliente = encargoDTO.ApellidosCliente,
-                NumeroTelefono = encargoDTO.NumeroTelefono,
-                MetodoPago = encargoDTO.MetodoPago,
-                Descripcion = encargoDTO.Descripcion,
-                FechaEncargo = DateTime.Now,
-                LineasEncargo = new List<LineaEncargo>()
-            };
+                var encargo = new EncargoImpresion(
+                    DateTime.Now, 
+                    encargoDTO.NombreCliente, 
+                    encargoDTO.ApellidosCliente, 
+                    encargoDTO.DireccionEnvio, 
+                    encargoDTO.NumeroTelefono, 
+                    encargoDTO.Descripcion, 
+                    0, 
+                    encargoDTO.MetodoPago
+                );
 
             decimal precioTotal = 0;
 
@@ -58,15 +58,17 @@ namespace AppForSEII.API.Controllers
 
                 if (pieza == null || material == null)
                 {
-                    return BadRequest(new { message = "La pieza o el material seleccionado no existen." });
+                    _logger.LogError($"{DateTime.Now} Error: La pieza o el material no existen.");
+                    return BadRequest("La pieza o el material seleccionado no existen.");
                 }
 
                // var esMaterialValido = await _context.PiezaMaterials //validar si este material es válido para la pieza elegida a traves de PiezaMaterial
                 //    .AnyAsync(pm => pm.Pieza3DId == lineaDto.Pieza3DId && pm.MaterialId == lineaDto.MaterialId);
 
                 //if (!esMaterialValido)
-                //{
-                //    return BadRequest(new { message = $"El material '{material.Nombre}' no es válido para la pieza '{pieza.Nombre}'." });
+                //{  
+                //_logger.LogError($"{DateTime.Now} Error: El material '{material.Nombre}' no es válido para la pieza '{pieza.Nombre}'.");  
+                //return BadRequest(new { message = $"El material '{material.Nombre}' no es válido para la pieza '{pieza.Nombre}'." });
                 //}
 
                 //Calculamos precios (Precio del material * peso de la pieza
@@ -92,6 +94,7 @@ namespace AppForSEII.API.Controllers
             _context.EncargosImpresion.Add(encargo);
             await _context.SaveChangesAsync();
 
+            //de momento apunta a si mismo al subir el get ultimo lo cambio
             return CreatedAtAction(nameof(CreateEncargo), new { id = encargo.Id }, encargoDTO);
                 }
             
