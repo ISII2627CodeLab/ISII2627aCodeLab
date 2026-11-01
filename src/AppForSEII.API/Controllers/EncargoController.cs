@@ -21,7 +21,7 @@ namespace AppForSEII.API.Controllers
         }
 
             [HttpPost]
-            [ProducesResponseType((int)HttpStatusCode.Created)]
+            [ProducesResponseType(typeof(EncargoDetailsDTO), (int)HttpStatusCode.Created)]
             [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
             public async Task<ActionResult> CreateEncargo([FromBody] EncargoCreateDTO encargoDTO)
             {
