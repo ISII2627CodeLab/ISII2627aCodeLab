@@ -21,7 +21,7 @@ namespace AppForSEII.API.Controllers
         }
 
             [HttpPost]
-            [ProducesResponseType((int)HttpStatusCode.Created)]
+            [ProducesResponseType(typeof(EncargoDetailsDTO), (int)HttpStatusCode.Created)]
             [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
             public async Task<ActionResult> CreateEncargo([FromBody] EncargoCreateDTO encargoDTO)
             {
@@ -68,7 +68,7 @@ namespace AppForSEII.API.Controllers
                 //if (!esMaterialValido)
                 //{  
                 //_logger.LogError($"{DateTime.Now} Error: El material '{material.Nombre}' no es válido para la pieza '{pieza.Nombre}'.");  
-                //return BadRequest(new { message = $"El material '{material.Nombre}' no es válido para la pieza '{pieza.Nombre}'." });
+                //return BadRequest("El material no es válido para la pieza.");
                 //}
 
                 //Calculamos precios (Precio del material * peso de la pieza
@@ -94,10 +94,29 @@ namespace AppForSEII.API.Controllers
             _context.EncargosImpresion.Add(encargo);
             await _context.SaveChangesAsync();
 
-            //de momento apunta a si mismo al subir el get ultimo lo cambio
-            return CreatedAtAction(nameof(CreateEncargo), new { id = encargo.Id }, encargoDTO);
-                }
-            
+            var encargoDetailsDTO = new EncargoDetailsDTO(
+                encargo.Id,
+                encargo.FechaEncargo,
+                encargo.NombreCliente,
+                encargo.ApellidosCliente,
+                encargo.DireccionEnvio,
+                encargo.NumeroTelefono,
+                encargo.MetodoPago,
+                encargo.Descripcion,
+                encargo.PrecioTotal,
+                encargo.LineasEncargo.Select(le => new LineaEncargoDetailsDTO(
+                    le.Pieza.Nombre,
+                    le.MaterialSeleccionado.Nombre,
+                    le.Cantidad,
+                    le.PrecioUnidad,
+                    le.Subtotal,
+                    encargo.Descripcion
+                )).ToList()
+            );
 
+
+           return CreatedAtAction("GetEncargo", "EncargoDetails", new { id = encargo.Id }, encargoDetailsDTO);
+                }
+        
     }
 }
