@@ -28,5 +28,29 @@ namespace AppForSEII.API.DTOs.EncargoDTOs
         public string? Descripcion { get; set; }
         public decimal PrecioTotal { get; set; }
         public List<LineaEncargoDetailsDTO> LineasEncargo { get; set; }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is EncargoDetailsDTO otro)
+            {
+                return Id == otro.Id &&
+                    // Comparamos la fecha truncando a fecha/minuto para evitar conflictos de milisegundos con DateTime.Now
+                    FechaEncargo.Date == otro.FechaEncargo.Date &&
+                    NombreCliente == otro.NombreCliente &&
+                    ApellidosCliente == otro.ApellidosCliente &&
+                    DireccionEnvio == otro.DireccionEnvio &&
+                    NumeroTelefono == otro.NumeroTelefono &&
+                    MetodoPago == otro.MetodoPago &&
+                    Descripcion == otro.Descripcion &&
+                    PrecioTotal == otro.PrecioTotal &&
+                    LineasEncargo.SequenceEqual(otro.LineasEncargo);
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, NombreCliente, ApellidosCliente, PrecioTotal);
+        }
     }
 }
