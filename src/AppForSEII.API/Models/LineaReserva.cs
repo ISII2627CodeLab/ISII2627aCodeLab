@@ -2,6 +2,16 @@ namespace AppForSEII.API.Models;
 
 public class LineaReserva
 {
+    public LineaReserva()
+    {
+    }
+    public LineaReserva(TiempoReserva tiempoReserva, decimal precioSubtotal, int impresora3DId)
+    :this(){
+        TiempoReserva = tiempoReserva;
+        PrecioSubtotal = precioSubtotal;
+        Impresora3DId = impresora3DId;
+    }
+     
     [Key]
     public int Id { get; set; }
 
