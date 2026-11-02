@@ -1,16 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using AppForSEII.API.Data;
+using AppForSEII.API.DTOs.AccesorioDTO;
 using AppForSEII.API.Models;
-using AppForSEII.API.DTOs.AccesorioDTOs;
-
-namespace AppForSEII.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -25,8 +18,10 @@ public class AccesorioController : ControllerBase
         _logger = logger;
     }
 
-    // 1.GetAccesoriosForPurchase
+    // 1. SELECT - GET: GetAccesoriosForPurchase
+    /// <summary>
     /// Consulta y filtra el catálogo de accesorios disponibles para comprar.
+    /// </summary>
     [HttpGet]
     [Route("[action]")]
     [ProducesResponseType(typeof(IList<AccesorioDTO>), (int)HttpStatusCode.OK)]
@@ -63,8 +58,10 @@ public class AccesorioController : ControllerBase
         return Ok(accesoriosDTO);
     }
 
-    // 2.GetCompraAccesorios
+    // 2. DETAILS - GET: GetCompraAccesorios
+    /// <summary>
     /// Obtiene el detalle completo de una compra de accesorios realizada.
+    /// </summary>
     [HttpGet]
     [Route("[action]/{id}")]
     [ProducesResponseType(typeof(CompraAccesoriosDetailDTO), (int)HttpStatusCode.OK)]
@@ -84,6 +81,7 @@ public class AccesorioController : ControllerBase
                 c.NumeroTelefono,
                 c.PrecioTotal,
                 c.MetodoPago,
+                c.ClienteId ?? string.Empty,
                 c.LineasCompra.Select(l => new LineaCompraAccesorioDTO(
                     l.Id,
                     l.Cantidad,
@@ -103,8 +101,10 @@ public class AccesorioController : ControllerBase
         return Ok(compra);
     }
 
-    // 3.CreateCompraAccesorios
-    /// Registra una nueva compra de accesorios verificando y descontando el stock.
+    // 3. CREATE - POST: CreateCompraAccesorios
+    /// <summary>
+    /// Registra una nueva compra de accesorios verificando cliente y disponibilidad de stock.
+    /// </summary>
     [HttpPost]
     [Route("[action]")]
     [ProducesResponseType(typeof(CompraAccesoriosDetailDTO), (int)HttpStatusCode.Created)]
@@ -122,17 +122,23 @@ public class AccesorioController : ControllerBase
             return BadRequest("El carrito de compra no contiene ningún accesorio.");
         }
 
-        decimal precioTotal = 0m;
-        var nuevaCompra = new CompraAccesorios
+        var cliente = await _context.Users.OfType<Cliente>().FirstOrDefaultAsync(c => c.Id == dto.ClienteId);
+        if (cliente == null)
         {
-            FechaCompra = DateTime.Now,
-            NombreCliente = dto.NombreCliente,
-            ApellidosCliente = dto.ApellidosCliente,
-            DireccionEnvio = dto.DireccionEnvio,
-            NumeroTelefono = dto.NumeroTelefono,
-            MetodoPago = dto.MetodoPago,
-            ClienteId = dto.ClienteId
-        };
+            return NotFound($"No existe ningún cliente registrado con el ID {dto.ClienteId}.");
+        }
+
+        decimal precioTotal = 0m;
+        var nuevaCompra = new CompraAccesorios(
+            DateTime.Now,
+            dto.NombreCliente,
+            dto.ApellidosCliente,
+            dto.DireccionEnvio,
+            dto.NumeroTelefono,
+            0m,
+            dto.MetodoPago,
+            cliente
+        );
 
         foreach (var item in dto.LineasCompra)
         {
@@ -144,24 +150,22 @@ public class AccesorioController : ControllerBase
 
             if (accesorio.CantidadDisponible < item.Cantidad)
             {
-                _logger.LogWarning($"{DateTime.Now} Stock insuficiente para el accesorio '{accesorio.Nombre}'. Solicitado: {item.Cantidad}, Disponible: {accesorio.CantidadDisponible}");
+                _logger.LogWarning($"{DateTime.Now} Stock insuficiente para '{accesorio.Nombre}'. Solicitado: {item.Cantidad}, Disponible: {accesorio.CantidadDisponible}");
                 return BadRequest($"Stock insuficiente para '{accesorio.Nombre}'. Máximo disponible: {accesorio.CantidadDisponible}.");
             }
 
-            // Descontar stock
             accesorio.CantidadDisponible -= item.Cantidad;
 
             decimal subtotal = accesorio.Precio * item.Cantidad;
             precioTotal += subtotal;
 
-            var linea = new LineaCompraAccesorio
-            {
-                Cantidad = item.Cantidad,
-                PrecioUnidad = accesorio.Precio,
-                Subtotal = subtotal,
-                Accesorio = accesorio,
-                CompraAccesorios = nuevaCompra
-            };
+            var linea = new LineaCompraAccesorio(
+                item.Cantidad,
+                accesorio.Precio,
+                subtotal,
+                accesorio,
+                nuevaCompra
+            );
 
             nuevaCompra.LineasCompra.Add(linea);
         }
@@ -180,6 +184,7 @@ public class AccesorioController : ControllerBase
             nuevaCompra.NumeroTelefono,
             nuevaCompra.PrecioTotal,
             nuevaCompra.MetodoPago,
+            nuevaCompra.ClienteId ?? string.Empty,
             nuevaCompra.LineasCompra.Select(l => new LineaCompraAccesorioDTO(
                 l.Id,
                 l.Cantidad,
