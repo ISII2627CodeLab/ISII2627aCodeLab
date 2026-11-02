@@ -19,9 +19,7 @@ public class AccesorioController : ControllerBase
     }
 
     // 1. SELECT - GET: GetAccesoriosForPurchase
-    /// <summary>
     /// Consulta y filtra el catálogo de accesorios disponibles para comprar.
-    /// </summary>
     [HttpGet]
     [Route("[action]")]
     [ProducesResponseType(typeof(IList<AccesorioDTO>), (int)HttpStatusCode.OK)]
@@ -59,9 +57,7 @@ public class AccesorioController : ControllerBase
     }
 
     // 2. DETAILS - GET: GetCompraAccesorios
-    /// <summary>
     /// Obtiene el detalle completo de una compra de accesorios realizada.
-    /// </summary>
     [HttpGet]
     [Route("[action]/{id}")]
     [ProducesResponseType(typeof(CompraAccesoriosDetailDTO), (int)HttpStatusCode.OK)]
@@ -102,9 +98,7 @@ public class AccesorioController : ControllerBase
     }
 
     // 3. CREATE - POST: CreateCompraAccesorios
-    /// <summary>
     /// Registra una nueva compra de accesorios verificando cliente y disponibilidad de stock.
-    /// </summary>
     [HttpPost]
     [Route("[action]")]
     [ProducesResponseType(typeof(CompraAccesoriosDetailDTO), (int)HttpStatusCode.Created)]
