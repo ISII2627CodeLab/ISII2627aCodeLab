@@ -7,21 +7,18 @@ using AppForSEII.API.DTOs.EncargoDTOs;
 using AppForSEII.API.Models;
 using System.Net;
 
-namespace AppForSEII.UT.EncargosController_test
+namespace AppForSEII.UT.EncargosControllerTest
 {
-    public class CreateEncargo_test : AppForSEII4SqliteUT
+    public class CreateEncargoTest : AppForSEII4SqliteUT
     {
-        public CreateEncargo_test()
+        public CreateEncargoTest()
         {
             // 1. Creamos el material y la pieza 3D usando tipos explícitos
             Material material = new Material("PLA", 0.05m, 5000.0m);
             Pieza3D pieza3D = new Pieza3D("Dragon Mini", "Miniatura detallada de un dragón", 45.5, 12.50m, CategoriaPieza.MiniaturasYMaquetas);
 
-            // 2. Creamos la relación en la tabla intermedia usando tipo explícito
-            PiezaMaterial piezaMaterial = new PiezaMaterial
-            {              Pieza3D = pieza3D,
-                Material = material
-            };
+            // 2. Creamos la relación en la tabla intermedia usando el constructor
+            PiezaMaterial piezaMaterial = new PiezaMaterial(pieza3D, material);
 
             _context.Materiales.Add(material);
             _context.Piezas3D.Add(pieza3D);
@@ -78,7 +75,7 @@ namespace AppForSEII.UT.EncargosController_test
             
             //luego obtenemos el objeto de los detalles devueltos
             var actualDetails = Assert.IsType<EncargoDetailsDTO>(createdResult.Value);
-            expectedDetails.FechaEncargo = actualDetails.FechaEncargo;
+            
 
             //Comprobamos que los detalles devueltos coinciden con los esperados
             Assert.Equal(expectedDetails, actualDetails);
