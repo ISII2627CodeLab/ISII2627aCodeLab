@@ -8,7 +8,7 @@ public class Pieza3D
         Nombre = string.Empty;
         Descripcion = string.Empty;
         LineasEncargo = new List<LineaEncargo>();
-        MaterialesValidos = new HashSet<Material>();
+        PiezaMaterials = new List<PiezaMaterial>();
     }
 
     public Pieza3D(string nombre, string descripcion, double pesoGramos, decimal precioEstimado, CategoriaPieza categoria)
@@ -45,8 +45,6 @@ public class Pieza3D
     public CategoriaPieza Categoria { get; set; }
 
     // Relaciones
-    public int MaterialId { get; set; }
-    public Material? Material { get; set; }
     public IList<LineaEncargo> LineasEncargo { get; set; }
-    public ICollection<Material> MaterialesValidos { get; set; }
+    public ICollection<PiezaMaterial> PiezaMaterials { get; set; }
 }
