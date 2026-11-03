@@ -2,11 +2,11 @@ using AppForSEII.API.Controllers;
 using AppForSEII.API.DTOs.EncargoDTOs;
 
 
-namespace AppForSEII.UT.EncargoDetailsController_test
+namespace AppForSEII.UT.EncargoDetailsControllerTest
 {
-    public class GetEncargoDetails_test : AppForSEII4SqliteUT
+    public class GetEncargoDetailsTest : AppForSEII4SqliteUT
     {
-        public GetEncargoDetails_test()
+        public GetEncargoDetailsTest()
         {
             //insertamos los datos necesarios en la BD de prueba 
             // para que el Include y el where del controlador los encuentren al buscar por ID = 1.
@@ -27,16 +27,12 @@ namespace AppForSEII.UT.EncargoDetailsController_test
             decimal precioUnidad = (decimal)45.5 * 0.05m; // 2.275
             decimal subtotal = precioUnidad * 2;         // 4.55
 
-            var lineaEncargo = new LineaEncargo
+            LineaEncargo lineaEncargo = new LineaEncargo(2, precioUnidad, subtotal)
             {
-                Cantidad = 2,
-                PrecioUnidad = precioUnidad,
-                Subtotal = subtotal,
                 Pieza = pieza3D,
                 MaterialSeleccionado = material,
                 EncargoImpresion = encargo
             };
-
             encargo.LineasEncargo.Add(lineaEncargo);
 
             _context.Materiales.Add(material);
@@ -82,7 +78,6 @@ namespace AppForSEII.UT.EncargoDetailsController_test
             
             //2.Extraemos el valor y comprobamos que es del tipo EncargoDetailsDTO
             var actualDetails = Assert.IsType<EncargoDetailsDTO>(okResult.Value);
-            expectedDetails.FechaEncargo = actualDetails.FechaEncargo;
 
             //comprobamos que es igual al objeto esperado
             Assert.Equal(expectedDetails, actualDetails);
