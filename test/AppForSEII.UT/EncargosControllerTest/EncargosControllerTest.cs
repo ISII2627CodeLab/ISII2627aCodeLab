@@ -13,15 +13,19 @@ namespace AppForSEII.UT.EncargosController_test
     {
         public CreateEncargo_test()
         {
-            //insertamos un material y una pieza 3D en la BD de prueba
-            var material = new Material("PLA", 0.05m, 5000.0m);
-            var pieza3D = new Pieza3D("Dragon Mini", "Miniatura detallada de un dragón", 45.5, 12.50m, CategoriaPieza.MiniaturasYMaquetas)
-            {
+            // 1. Creamos el material y la pieza 3D usando tipos explícitos
+            Material material = new Material("PLA", 0.05m, 5000.0m);
+            Pieza3D pieza3D = new Pieza3D("Dragon Mini", "Miniatura detallada de un dragón", 45.5, 12.50m, CategoriaPieza.MiniaturasYMaquetas);
+
+            // 2. Creamos la relación en la tabla intermedia usando tipo explícito
+            PiezaMaterial piezaMaterial = new PiezaMaterial
+            {              Pieza3D = pieza3D,
                 Material = material
             };
 
             _context.Materiales.Add(material);
             _context.Piezas3D.Add(pieza3D);
+            _context.PiezaMaterials.Add(piezaMaterial);
             _context.SaveChanges();
         }
 
