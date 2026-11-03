@@ -62,14 +62,15 @@ namespace AppForSEII.API.Controllers
                     return BadRequest("La pieza o el material seleccionado no existen.");
                 }
 
-               // var esMaterialValido = await _context.PiezaMaterials //validar si este material es válido para la pieza elegida a traves de PiezaMaterial
-                //    .AnyAsync(pm => pm.Pieza3DId == lineaDto.Pieza3DId && pm.MaterialId == lineaDto.MaterialId);
+                var esMaterialValido = await _context.PiezaMaterials //validar si este material es válido para la pieza elegida a traves de PiezaMaterial
+                    .AnyAsync(pm => pm.Pieza3DId == lineaDto.Pieza3DId && pm.MaterialId == lineaDto.MaterialId);
 
-                //if (!esMaterialValido)
-                //{  
-                //_logger.LogError($"{DateTime.Now} Error: El material '{material.Nombre}' no es válido para la pieza '{pieza.Nombre}'.");  
-                //return BadRequest("El material no es válido para la pieza.");
-                //}
+                if (!esMaterialValido)
+                {  
+                    _logger.LogError($"{DateTime.Now} Error: El material '{material.Nombre}' no es válido para la pieza '{pieza.Nombre}'.");  
+                    return BadRequest("El material no es válido para la pieza.");
+                } 
+            
 
                 //Calculamos precios (Precio del material * peso de la pieza
                 decimal precioUnidad = (decimal)pieza.PesoGramos * material.PrecioPorGramo;
