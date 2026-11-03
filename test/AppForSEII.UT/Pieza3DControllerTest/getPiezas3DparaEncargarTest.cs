@@ -4,7 +4,7 @@ using AppForSEII.API.DTOs.Pieza3DDTOs;
 using AppForSEII.API.Models;
 
 
-namespace AppForSEII.UT.Pieza3DController_test
+namespace AppForSEII.UT.Pieza3DControllerTest
 {
     public class getPiezas3DparaEncargarTest : AppForSEII4SqliteUT
     {
