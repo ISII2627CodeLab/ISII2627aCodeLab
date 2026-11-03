@@ -27,6 +27,13 @@ namespace AppForSEII.API.Data;
             {
                 logger.LogError(ex, "An error occurred seeding the Users in the Database.");
             }
+            try{
+                SeedLicenciasModelo3D(dbContext);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "An error occurred seeding the LicenciasModelo3D in the Database.");
+            }
             try
             {
                 SeedModelos3D(dbContext);
@@ -55,12 +62,6 @@ namespace AppForSEII.API.Data;
             {
                 logger.LogError(ex, "An error occurred seeding an EncargoImpresion in the Database.");
                 
-            } try{
-                SeedLicenciasModelo3D(dbContext);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "An error occurred seeding the LicenciasModelo3D in the Database.");
             }
         }
 
@@ -113,30 +114,30 @@ namespace AppForSEII.API.Data;
         
         public static void SeedLicenciasModelo3D(ApplicationDbContext dbcontext)
         {
-            if (dbcontext.LicenciasModelo3D.FirstOrDefault(l => l.Id == 1) == null)
+            if (dbcontext.LicenciasModelo3D.FirstOrDefault(l => l.Nombre == "Licencia Estándar") == null)
             {
-                var licencia = new LicenciaModelo3D
-                {
-                    Id = 1,
-                    Nombre = "Licencia Estándar",
-                    FechaExpiracion = DateTime.Now.AddYears(1)
-                };
+                LicenciaModelo3D licencia = new LicenciaModelo3D
+                (
+                    "Licencia Estándar",
+                    DateTime.Now.AddYears(1)
+                );
                 dbcontext.LicenciasModelo3D.Add(licencia);
             }
             dbcontext.SaveChanges();
         }
         public static void SeedModelos3D(ApplicationDbContext dbcontext)
         {
-            if (dbcontext.Modelos3D.FirstOrDefault(m => m.Nombre == "Robot") == null)
+            LicenciaModelo3D? licencia = dbcontext.LicenciasModelo3D.FirstOrDefault(l => l.Nombre == "Licencia Estándar");
+            if (licencia != null && dbcontext.Modelos3D.FirstOrDefault(m => m.Nombre == "Robot") == null)
             {
-                var modelo = new Modelo3D
-                {   
-                    Id = 1,
-                    Nombre = "Robot",
-                    Categoria = "Personajes",
-                    Formato = FormatoModelo3D.OBJ,
-                    Precio = 15
-                };
+                Modelo3D modelo = new Modelo3D
+                (   
+                    "Robot",
+                    "Personajes",
+                    FormatoModelo3D.OBJ,
+                    15,
+                    licencia
+                );
                 dbcontext.Modelos3D.Add(modelo);
             }
 
@@ -168,7 +169,10 @@ namespace AppForSEII.API.Data;
                 // Cambiado esto por cambio en el Cu. En vez de pieza.Material = pla, usamos PiezaMaterial
                 if (pla != null)
                 {
-                    var piezaMaterial = new PiezaMaterial { Pieza3D = pieza, Material = pla };
+                    PiezaMaterial piezaMaterial = new PiezaMaterial(
+                        pieza,
+                        pla
+                    );
                     dbContext.PiezaMaterials.Add(piezaMaterial);
                 }
             }
