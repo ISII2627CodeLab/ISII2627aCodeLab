@@ -1,3 +1,4 @@
+using AppForSEII.API.Logging;
 using Microsoft.Data.Sqlite;
 using System.Data.Common;
 
