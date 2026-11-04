@@ -10,7 +10,7 @@ public class RabbitMQLogger : ILogger, IDisposable
     private readonly string _name;
     private readonly RabbitMQLoggerConfiguration _config;
     private IConnection _connection;
-    private IChannel _channel;
+    private  IChannel _channel;
     private BasicProperties _properties;
 
     public RabbitMQLogger(string name, RabbitMQLoggerConfiguration config)
@@ -25,12 +25,9 @@ public class RabbitMQLogger : ILogger, IDisposable
             Persistent = _config.Durable,
             ContentType = "application/json"
         };
-
-        //añadido JA
-        InitializeAsync().GetAwaiter().GetResult();
     }
-    private async Task InitializeAsync(){
-        //añadido
+    public async Task InitializeAsync()
+    {
         var factory = new ConnectionFactory
         {
             HostName = _config.HostName,
@@ -38,16 +35,15 @@ public class RabbitMQLogger : ILogger, IDisposable
             UserName = _config.UserName,
             Password = _config.Password
         };
+        _connection = factory.CreateConnectionAsync().GetAwaiter().GetResult();
 
-        _connection = await factory.CreateConnectionAsync();
-        _channel = await _connection.CreateChannelAsync();
-        
+        _channel = _connection.CreateChannelAsync().GetAwaiter().GetResult();
 
-        await _channel.ExchangeDeclareAsync(
-            exchange: _config.Exchange,
-            type: _config.ExchangeType,
-            durable: _config.Durable); 
-    }
+        _channel.ExchangeDeclareAsync(
+                exchange: _config.Exchange,
+                type: _config.ExchangeType,
+                durable: _config.Durable ).GetAwaiter().GetResult();
+        }
 
     private static void ValidateConfiguration(RabbitMQLoggerConfiguration config)
     {
@@ -114,9 +110,9 @@ public class RabbitMQLogger : ILogger, IDisposable
     {
         try
         {
-            _channel?.Close();
+            _channel?.CloseAsync().GetAwaiter().GetResult();
             _channel?.Dispose();
-            _connection?.Close();
+            _connection?.CloseAsync().GetAwaiter().GetResult();
             _connection?.Dispose();
         }
         catch (Exception ex)
