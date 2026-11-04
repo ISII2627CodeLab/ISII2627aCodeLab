@@ -10,7 +10,7 @@ public class RabbitMQLogger : ILogger, IDisposable
     private readonly string _name;
     private readonly RabbitMQLoggerConfiguration _config;
     private IConnection _connection;
-    private readonly IChannel _channel;
+    private  IChannel _channel;
     private BasicProperties _properties;
 
     public RabbitMQLogger(string name, RabbitMQLoggerConfiguration config)
@@ -26,6 +26,24 @@ public class RabbitMQLogger : ILogger, IDisposable
             ContentType = "application/json"
         };
     }
+    public async Task InitializeAsync()
+    {
+        var factory = new ConnectionFactory
+        {
+            HostName = _config.HostName,
+            Port = _config.Port,
+            UserName = _config.UserName,
+            Password = _config.Password
+        };
+        _connection = factory.CreateConnectionAsync().GetAwaiter().GetResult();
+
+        _channel = _connection.CreateChannelAsync().GetAwaiter().GetResult();
+
+        _channel.ExchangeDeclareAsync(
+                exchange: _config.Exchange,
+                type: _config.ExchangeType,
+                durable: _config.Durable ).GetAwaiter().GetResult();
+        }
 
     private static void ValidateConfiguration(RabbitMQLoggerConfiguration config)
     {
@@ -81,9 +99,9 @@ public class RabbitMQLogger : ILogger, IDisposable
     {
         try
         {
-            _channel?.Close();
+            _channel?.CloseAsync().GetAwaiter().GetResult();
             _channel?.Dispose();
-            _connection?.Close();
+            _connection?.CloseAsync().GetAwaiter().GetResult();
             _connection?.Dispose();
         }
         catch (Exception ex)
