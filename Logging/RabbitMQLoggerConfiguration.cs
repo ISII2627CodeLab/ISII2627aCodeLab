@@ -1,4 +1,4 @@
-namespace TodoApi.Logging;
+namespace ISII2627aCodeLab.Logging;
 
 public class RabbitMQLoggerConfiguration
 {

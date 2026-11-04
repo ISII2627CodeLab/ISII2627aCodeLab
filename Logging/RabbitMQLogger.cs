@@ -3,7 +3,7 @@ using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 
-namespace TodoApi.Logging;
+namespace ISII2627aCodeLab.Logging;
 
 public class RabbitMQLogger : ILogger, IDisposable
 {

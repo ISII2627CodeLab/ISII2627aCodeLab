@@ -2,7 +2,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace TodoApi.Logging;
+namespace ISII2627aCodeLab.Logging;
 
 public static class RabbitMQLoggerExtensions
 {

@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace TodoApi.Logging;
+namespace ISII2627aCodeLab.Logging;
 
 [ProviderAlias("RabbitMQ")]
 public class RabbitMQLoggerProvider : ILoggerProvider
