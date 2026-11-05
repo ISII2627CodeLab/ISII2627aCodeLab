@@ -46,5 +46,4 @@ public class Modelo3DController : ControllerBase
 
         return Ok(modelos);
     }
-
 }
