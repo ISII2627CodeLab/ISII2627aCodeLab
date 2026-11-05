@@ -197,8 +197,8 @@ namespace AppForSEII.API.Data;
         {
             if (!dbContext.EncargosImpresion.Any())
             {
-                var pieza = dbContext.Piezas3D.FirstOrDefault();
-                var material = dbContext.Materiales.FirstOrDefault();
+                var pieza = dbContext.Piezas3D.OrderBy(p => p.Id).FirstOrDefault();
+                var material = dbContext.Materiales.OrderBy(m => m.Id).FirstOrDefault();
 
                 if (pieza == null || material == null) return;
 
