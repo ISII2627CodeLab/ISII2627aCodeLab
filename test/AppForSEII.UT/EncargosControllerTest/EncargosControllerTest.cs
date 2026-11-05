@@ -108,7 +108,9 @@ namespace AppForSEII.UT.EncargosControllerTest
             // Assert
             //comprobamos que devuelve BadRequest con el mensaje de error esperado
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal("Debe incluir al menos una pieza para ser impresa.", badRequestResult.Value);
+            var problemDetails = Assert.IsType<ValidationProblemDetails>(badRequestResult.Value);
+            Assert.True(problemDetails.Errors.ContainsKey("LineasEncargo"));
+            Assert.Contains("Debe incluir al menos una pieza para ser impresa.", problemDetails.Errors["LineasEncargo"]);
         }
 
         [Fact]
@@ -137,9 +139,12 @@ namespace AppForSEII.UT.EncargosControllerTest
 
             // Assert
             // Comprobamos que devuelve BadRequest informando de que no existe
+            // Para el test de pieza/material no existente (CreateEncargo_PiezaOrMaterialNotFound_Error_test):
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal("La pieza o el material seleccionado no existen.", badRequestResult.Value);
-        
+            var problemDetails = Assert.IsType<ValidationProblemDetails>(badRequestResult.Value);
+            Assert.True(problemDetails.Errors.ContainsKey("LineasEncargo"));
+            Assert.Contains("La pieza o el material seleccionado no existen.", problemDetails.Errors["LineasEncargo"]);
+                    
         }
     }
 }
