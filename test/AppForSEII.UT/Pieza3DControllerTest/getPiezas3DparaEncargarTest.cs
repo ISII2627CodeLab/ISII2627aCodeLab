@@ -31,12 +31,14 @@ namespace AppForSEII.UT.Pieza3DControllerTest
             var allPieces = new List<Pieza3DSelectDTO> { p1, p2, p3 };
             var filterByName = new List<Pieza3DSelectDTO> { p1 }; 
             var filterByCategory = new List<Pieza3DSelectDTO> { p3 }; 
+            var filterByBoth = new List<Pieza3DSelectDTO> { p3 };
 
             return new List<object?[]>
             {
                 new object?[] { null, null, allPieces },                  // Caso1: Sin filtros devolveria todas ordenadas
                 new object?[] { "Dragon", null, filterByName },          // Caso 2: si fiiltras por nombre
-                new object?[] { null, CategoriaPieza.Decoracion, filterByCategory } // Caso 3: si filtras por categoría
+                new object?[] { null, CategoriaPieza.Decoracion, filterByCategory }, // Caso 3: si filtras por categoría
+                new object?[] { "Vaso", CategoriaPieza.Decoracion, filterByBoth }     // Caso 4: Ambos filtros a la vez
             };
         }
 

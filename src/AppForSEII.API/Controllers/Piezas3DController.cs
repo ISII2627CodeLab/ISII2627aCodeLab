@@ -24,13 +24,9 @@ namespace AppForSEII.API.Controllers
             [Route("[action]")]
             [ProducesResponseType(typeof(IList<Pieza3DSelectDTO>), (int)HttpStatusCode.OK)]
             [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
-            [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
+            
             public async Task<ActionResult> GetPiezas3D(string? nombre, CategoriaPieza? categoria)
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
 
                 var piezas = await _context.Piezas3D
                     .Include(p => p.PiezaMaterials)
