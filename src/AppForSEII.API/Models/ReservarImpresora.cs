@@ -17,8 +17,8 @@ namespace AppForSEII.API.Models
             NombreCliente = nombreCliente;
             ApellidosCliente = apellidosCliente;
             DireccionFacturacion = direccionFacturacion;
-            PrecioTotal = 0;
-            MetodoPago = MetodoPago.Bizum;
+            PrecioTotal = precioTotal;
+            MetodoPago = metodoPago;
             
         } 
         [Key]
