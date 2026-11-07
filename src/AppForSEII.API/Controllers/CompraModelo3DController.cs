@@ -106,7 +106,7 @@ public class CompraModelo3DController : ControllerBase
                 )).ToList()
             );
 
-            return CreatedAtAction("GetCompraModelos3D", "CompraModelo3DDetails", new { id = compra.Id }, compraDetailDTO);     
+            return CreatedAtAction("GetModelos3DParaComprar", "CompraModelo3DDetails", new { id = compra.Id }, compraDetailDTO);     
 
         }
 }
