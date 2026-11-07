@@ -14,11 +14,11 @@ namespace AppForSEII.API.Models
         )
         :this(){
             FechaReserva = DateTime.Now;
-            NombreCliente = string.Empty;
-            ApellidosCliente = string.Empty;
-            DireccionFacturacion = string.Empty;
-            PrecioTotal = 0;
-            MetodoPago = MetodoPago.Bizum;
+            NombreCliente = nombreCliente;
+            ApellidosCliente = apellidosCliente;
+            DireccionFacturacion = direccionFacturacion;
+            PrecioTotal = precioTotal;
+            MetodoPago = metodoPago;
             
         }
         [Key]
