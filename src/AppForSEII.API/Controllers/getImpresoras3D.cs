@@ -46,18 +46,16 @@ namespace AppForMovies.API.Controllers
         public async Task<ActionResult> GetImpresorasForRental(string? nombre,TipoImpresora? tipo)
         {
            var impresoras = await _context.Impresoras3Ds
-           .Include(m => m.LineaReservas)
-            .ThenInclude(lr => lr.TiempoReserva)
         .Where(m => (nombre == null || m.Nombre.Contains(nombre))
                  && (tipo == null || m.Tipo == tipo))
         .OrderBy(m => m.Nombre)
         .Select(m => new selectImpresora3DDTO(
             m.Id,
-            m.Nombre,
+            m.Nombre, 
             m.Modelo, 
             m.Tipo,
             m.Descripcion,
-            m.PrecioKilovatioHora,
+            m.PrecioKilovatioHora, 
             m.PrecioReserva
         ))
         .ToListAsync();
