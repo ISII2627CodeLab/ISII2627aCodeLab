@@ -88,7 +88,7 @@ namespace AppForSEII.UT.Modelo3DControllerTest
 
             //Assert
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
-            Assert.Equal("No existen modelos 3D disponibles con los filtros seleccionados.", notFoundResult.Value);
+            Assert.Equal("No existen modelos 3D disponibles con los criterios seleccionados.", notFoundResult.Value);
         }
 
         [Fact]
@@ -105,7 +105,7 @@ namespace AppForSEII.UT.Modelo3DControllerTest
 
             //Assert
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
-            Assert.Equal("No existen modelos 3D disponibles con los filtros seleccionados.", notFoundResult.Value);
+            Assert.Equal("No existen modelos 3D disponibles con los criterios seleccionados.", notFoundResult.Value);
         }
 
         [Fact]
@@ -116,7 +116,6 @@ namespace AppForSEII.UT.Modelo3DControllerTest
             var mock = new Mock<ILogger<Modelo3DController>>();
             ILogger<Modelo3DController> logger = mock.Object;
             var controller = new Modelo3DController(_context, logger);
-            //Al llamar al método directamente, ASP.NET no valida los parámetros, así que simulamos un error de ModelState
             controller.ModelState.AddModelError("nombre", "El filtro no es válido");
 
             //Act

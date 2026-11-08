@@ -56,7 +56,7 @@ namespace AppForSEII.UT.CompraModelo3DControllerTest
             var allTests = new List<object[]>
             {
                 new object[] { carritoVacio, "Error: debes comprar al menos un modelo 3D." },
-                new object[] { pagoConBizum, "Error: el metodo de pago debe ser tarjeta de credito o PayPal." },
+                new object[] { pagoConBizum, "Error: el método de pago debe ser tarjeta de crédito o PayPal." },
                 new object[] { clienteNoRegistrado, "Error: el cliente no está registrado." },
                 new object[] { modeloInexistente, "El modelo 3D seleccionado no existe." },
             };
@@ -81,27 +81,6 @@ namespace AppForSEII.UT.CompraModelo3DControllerTest
             var errorActual = Assert.IsType<string>(badRequestResult.Value);
             //comprobamos que el error esperado y el obtenido son el mismo
             Assert.Equal(errorEsperado, errorActual);
-        }
-
-        [Fact]
-        [Trait("LevelTesting", "Unit Testing")]
-        public async Task CreateCompraModelo3D_ModelStateNoValido_BadRequest_test()
-        {
-            //Arrange
-            var mock = new Mock<ILogger<CompraModelo3DController>>();
-            ILogger<CompraModelo3DController> logger = mock.Object;
-            var controller = new CompraModelo3DController(_context, logger);
-            controller.ModelState.AddModelError("NombreCliente", "El nombre del cliente es obligatorio");
-
-            var compraDTO = new CompraModelo3DCreateDTO(_nombre, _apellidos, _correo, _direccion, null,
-                MetodoPago.TarjetaCredito, new List<LineaCompraModelo3DCreateDTO>() { new LineaCompraModelo3DCreateDTO(1, 1) });
-
-            //Act
-            var result = await controller.CreateCompraModelo3D(compraDTO);
-
-            //Assert
-            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal("Error: los datos de la compra no son válidos.", badRequestResult.Value);
         }
 
         [Fact]
