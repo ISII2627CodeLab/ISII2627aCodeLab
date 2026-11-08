@@ -83,12 +83,8 @@ namespace AppForSEII.API.Controllers
                 .Include(r => r.LineaReservas)
                     .ThenInclude(lr => lr.Impresora3D)
                 .Where(r => r.Id == reserva.Id)
-                .FirstOrDefaultAsync();
+                .FirstAsync();
 
-            if (reservaCreada == null)
-            {
-                return NotFound();
-            } 
             var detalleDTO = new ReservaDetailDTO(
                 reservaCreada.Id,
                 reservaCreada.FechaReserva, 
@@ -98,18 +94,18 @@ namespace AppForSEII.API.Controllers
                 reservaCreada.PrecioTotal,
                 reservaCreada.MetodoPago,
                 reservaCreada.LineaReservas.Select(le => new LineaReservaDetailsDTO(
-                    le.Impresora3D != null ? le.Impresora3D.Nombre : string.Empty,
-                    le.Impresora3D != null ? le.Impresora3D.Modelo : string.Empty,
-                    le.Impresora3D != null ? le.Impresora3D.Tipo.ToString() : string.Empty,
-                    le.Impresora3D != null ? le.Impresora3D.Descripcion : string.Empty,
+                    le.Impresora3D!.Nombre,
+                    le.Impresora3D!.Modelo,
+                    le.Impresora3D!.Tipo.ToString(),
+                    le.Impresora3D!.Descripcion,
                     le.TiempoReserva,
-                    le.Impresora3D != null ? le.Impresora3D.PrecioKilovatioHora : 0,
-                    le.Impresora3D != null ? le.Impresora3D.PrecioReserva : 0,
+                    le.Impresora3D!.PrecioKilovatioHora,
+                    le.Impresora3D!.PrecioReserva,
                     le.PrecioSubtotal
                 )).ToList()
             );
 
-            return CreatedAtAction("GetReservaDetails", "ReservaDetail", new { id = reserva.Id }, detalleDTO);
+            return CreatedAtAction("GetReservaDetails", "Reserva", new { id = reserva.Id }, detalleDTO);
         }
     }
-}
+} 
