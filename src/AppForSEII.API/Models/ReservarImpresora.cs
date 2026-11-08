@@ -20,7 +20,7 @@ namespace AppForSEII.API.Models
             PrecioTotal = precioTotal;
             MetodoPago = metodoPago;
             
-        }
+        } 
         [Key]
         public int Id { get; set; }
 
