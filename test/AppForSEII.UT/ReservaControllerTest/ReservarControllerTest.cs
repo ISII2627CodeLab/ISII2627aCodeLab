@@ -41,7 +41,7 @@ namespace AppForSEII.UT.ReservaControllerTest
                 new List<LineaReservaDTO> { lineaCreateDto }
             );
 
-            decimal subtotal = 5.0m;
+            decimal subtotal = 5.0m * 1; // factorTiempo = 0 + 1 = 1 -> 5.0 * 1 = 5.0
 
             // Preparamos los DTOs de detalles esperados con todos los parámetros requeridos
             var lineaDetailExpected = new LineaReservaDetailsDTO(
@@ -71,8 +71,8 @@ namespace AppForSEII.UT.ReservaControllerTest
             // Act
             var result = await controller.CreateReserva(reservaCreateDto);
 
-            // Assert
-            var createdResult = Assert.IsType<CreatedAtActionResult>(result);
+            // Assert - Usamos .Result para acceder al CreatedAtActionResult envuelto en el ActionResult<T>
+            var createdResult = Assert.IsType<CreatedAtActionResult>(result.Result);
             var actualDetails = Assert.IsType<ReservaDetailDTO>(createdResult.Value);
             Assert.Equal(expectedDetails, actualDetails);
         }
@@ -98,11 +98,10 @@ namespace AppForSEII.UT.ReservaControllerTest
             // Act
             var result = await controller.CreateReserva(reservaCreateDto);
 
-            // Assert
-            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            var problemDetails = Assert.IsType<ValidationProblemDetails>(badRequestResult.Value);
-            Assert.True(problemDetails.Errors.ContainsKey("LineasReserva"));
-            Assert.Contains("Debe incluir al menos una línea de reserva.", problemDetails.Errors["LineasReserva"]);
+            // Assert - Usamos .Result para acceder al BadRequestObjectResult
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result.Result);
+            var errorMessage = Assert.IsType<string>(badRequestResult.Value);
+            Assert.Equal("La reserva debe contener al menos una impresora.", errorMessage);
         }
 
         [Fact]
@@ -127,11 +126,10 @@ namespace AppForSEII.UT.ReservaControllerTest
             // Act
             var result = await controller.CreateReserva(reservaCreateDto);
 
-            // Assert
-            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            var problemDetails = Assert.IsType<ValidationProblemDetails>(badRequestResult.Value);
-            Assert.True(problemDetails.Errors.ContainsKey("LineasReserva"));
-            Assert.Contains("La impresora seleccionada no existe.", problemDetails.Errors["LineasReserva"]);
+            // Assert - Usamos .Result para acceder al BadRequestObjectResult
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result.Result);
+            var errorMessage = Assert.IsType<string>(badRequestResult.Value);
+            Assert.Equal("La impresora con ID 999 no existe.", errorMessage);
         }
     }
-}
+} 
