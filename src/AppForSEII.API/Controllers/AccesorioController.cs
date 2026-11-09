@@ -178,7 +178,7 @@ public class AccesorioController : ControllerBase
             nuevaCompra.NumeroTelefono,
             nuevaCompra.PrecioTotal,
             nuevaCompra.MetodoPago,
-            nuevaCompra.ClienteId ?? string.Empty,
+            nuevaCompra.ClienteId,
             nuevaCompra.LineasCompra.Select(l => new LineaCompraAccesorioDTO(
                 l.Id,
                 l.Cantidad,
