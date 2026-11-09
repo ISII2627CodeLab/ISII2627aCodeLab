@@ -7,6 +7,15 @@ on:
   push:
     branches:
       - 'JuanAntonio-ContinousDelivery'
+  
+  pull_request:
+    branches:
+      - 'development'
+    # paths:
+    #   - 'src/AppForSEII.API**'
+    types:
+      - closed
+
   workflow_dispatch:
 
 jobs:
