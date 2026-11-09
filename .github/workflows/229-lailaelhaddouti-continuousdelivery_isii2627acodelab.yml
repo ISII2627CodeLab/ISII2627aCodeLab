@@ -7,6 +7,11 @@ on:
   push:
     branches:
       - '229-lailaelhaddouti-continuousdelivery'
+  pull_request:
+    branches:
+      - 'development'
+    types: # se ejecuta cuando se cierra una PR
+      - closed
   workflow_dispatch:
 
 jobs:
@@ -41,6 +46,8 @@ jobs:
           path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy:
+    # Solo despliega si la PR se cerró porque se hizo merge
+    if: github.event.pull_request.merged == true
     runs-on: windows-latest
     needs: build
     permissions:
@@ -52,19 +59,20 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: .net-app
-      
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_30988CEC7E694129B26478DF64469089 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_57B8D26388C243C1B980C8C9DF939D22 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_40F9B6F997EB4564B768242AFC3A7A90 }}
+
+      # - name: Login to Azure
+      #   uses: azure/login@v2
+      #   with:
+      #     client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_30988CEC7E694129B26478DF64469089 }}
+      #     tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_57B8D26388C243C1B980C8C9DF939D22 }}
+      #     subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_40F9B6F997EB4564B768242AFC3A7A90 }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'ISII2627aCodeLab'
-          slot-name: 'Production'
+          # slot-name: 'Production'
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_LAILA }}
           package: .
           
