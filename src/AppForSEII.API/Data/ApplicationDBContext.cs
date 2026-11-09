@@ -9,12 +9,25 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 {
     protected override void OnModelCreating(ModelBuilder builder)
     {
-
         base.OnModelCreating(builder);
 
+        // Configuración de precisión para propiedades decimales (evita warnings de truncamiento)
+        builder.Entity<Impresora3D>()
+            .Property(i => i.PrecioKilovatioHora)
+            .HasPrecision(18, 2);
 
+        builder.Entity<Impresora3D>()
+            .Property(i => i.PrecioReserva)
+            .HasPrecision(18, 2);
+
+        builder.Entity<LineaReserva>()
+            .Property(lr => lr.PrecioSubtotal)
+            .HasPrecision(18, 2);
+
+        builder.Entity<ReservaImpresora>()
+            .Property(r => r.PrecioTotal)
+            .HasPrecision(18, 2);
     }
-
 
     public DbSet<ApplicationUser> ApplicationUsers { get; set; }
     public DbSet<Cliente> Clientes { get; set; }
@@ -27,18 +40,14 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Pieza3D> Piezas3D { get; set;}
     public DbSet<Material> Materiales { get; set; }
 
-    //añadido siguiente linea: 29-10-2026
+    // añadido: 29-10-2026
     public DbSet<PiezaMaterial> PiezaMaterials { get; set; }
-
 
     public DbSet<Accesorio> Accesorios { get; set; }
     public DbSet<CompraAccesorios> ComprasAccesorios { get; set; }
     public DbSet<LineaCompraAccesorio> LineasCompraAccesorio { get; set; }
 
     public DbSet<Impresora3D> Impresoras3Ds { get; set; }
-
     public DbSet<LineaReserva> LineasReservas { get; set; }
-
     public DbSet<ReservaImpresora> ReservaImpresoras { get; set; }
-   
 }
