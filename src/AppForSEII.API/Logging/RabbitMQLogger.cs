@@ -10,21 +10,22 @@ public class RabbitMQLogger : ILogger, IDisposable
     private readonly string _name;
     private readonly RabbitMQLoggerConfiguration _config;
     private IConnection _connection;
-    private  IChannel _channel;
+    private IChannel _channel;
     private BasicProperties _properties;
 
     public RabbitMQLogger(string name, RabbitMQLoggerConfiguration config)
     {
         _name = name ?? throw new ArgumentNullException(nameof(name));
         _config = config ?? throw new ArgumentNullException(nameof(config));
-        
-        ValidateConfiguration(_config); 
+
+        ValidateConfiguration(_config);
 
         _properties = new BasicProperties
         {
             Persistent = _config.Durable,
             ContentType = "application/json"
         };
+        InitializeAsync().GetAwaiter().GetResult();
     }
     public async Task InitializeAsync()
     {
@@ -35,15 +36,15 @@ public class RabbitMQLogger : ILogger, IDisposable
             UserName = _config.UserName,
             Password = _config.Password
         };
-        _connection = factory.CreateConnectionAsync().GetAwaiter().GetResult();
+        _connection = await factory.CreateConnectionAsync();
 
-        _channel = _connection.CreateChannelAsync().GetAwaiter().GetResult();
+        _channel = await _connection.CreateChannelAsync();
 
-        _channel.ExchangeDeclareAsync(
-                exchange: _config.Exchange,
-                type: _config.ExchangeType,
-                durable: _config.Durable ).GetAwaiter().GetResult();
-        }
+        await _channel.ExchangeDeclareAsync(
+                 exchange: _config.Exchange,
+                 type: _config.ExchangeType,
+                 durable: _config.Durable);
+    }
 
     private static void ValidateConfiguration(RabbitMQLoggerConfiguration config)
     {
