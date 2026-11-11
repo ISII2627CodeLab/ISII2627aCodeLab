@@ -13,6 +13,7 @@ namespace AppForMovies.API.Controllers
         {
             _context = context;
             _logger = logger;
+            _logger.LogInformation("getImpresoras3D initialized");
         }
         [HttpGet]
         [Route("[action]")]

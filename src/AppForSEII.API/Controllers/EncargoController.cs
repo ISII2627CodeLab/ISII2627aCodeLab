@@ -18,6 +18,7 @@ namespace AppForSEII.API.Controllers
         {
             _context = context;
             _logger = logger;
+            _logger.LogInformation("EncargoController initialized");
         }
 
             [HttpPost]
