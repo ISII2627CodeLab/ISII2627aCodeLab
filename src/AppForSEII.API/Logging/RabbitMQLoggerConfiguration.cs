@@ -1,4 +1,4 @@
-namespace ISII2627aCodeLab.Logging;
+namespace AppForSEII.API.Logging;
 
 public class RabbitMQLoggerConfiguration
 {
