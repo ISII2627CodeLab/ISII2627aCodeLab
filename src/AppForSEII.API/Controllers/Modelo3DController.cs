@@ -13,6 +13,7 @@ public class Modelo3DController : ControllerBase
     {
         _context = context;
         _logger = logger;
+        _logger.LogInformation("Modelo3DController initialized");
     }
 
     [HttpGet]
