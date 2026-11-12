@@ -30,6 +30,14 @@ namespace AppForSEII.API.Controllers
                     _logger.LogError($"{DateTime.Now} Error: El encargo no contiene lineas.");
                     ModelState.AddModelError("LineasEncargo", "Debe incluir al menos una pieza para ser impresa.");
                 }
+
+            //añadido examen
+            if (!encargoDTO.DireccionEnvio.EndsWith("España"))
+            {
+                _logger.LogError($"{DateTime.Now} Error: Solo se realizan envíos dentro de España");
+                ModelState.AddModelError("DireccionEnvio", "¡Error! Solo se realizan envíos dentro de España");
+            } //hasta aqui examen
+
                 else{
                     foreach (var lineaDto in encargoDTO.LineasEncargo) //por cada producto del encargo
                     {
