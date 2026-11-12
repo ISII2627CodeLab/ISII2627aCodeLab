@@ -59,7 +59,7 @@ namespace AppForSEII.UT.ReservaControllerTest
                 1,
                 DateTime.Now,
                 "Juan",
-                "Pérez",
+                "Pérez", 
                 "Calle Mayor 1",
                 subtotal,
                 MetodoPago.TarjetaCredito,
@@ -103,6 +103,27 @@ namespace AppForSEII.UT.ReservaControllerTest
             var errorMessage = Assert.IsType<string>(badRequestResult.Value);
             Assert.Equal("La reserva debe contener al menos una impresora.", errorMessage);
         }
+
+      
+         //ejercicio2 reservar impresoras 
+        [Fact]
+        [Trait("LevelTesting", "Unit Testing")]
+        public async Task CreateReserva_Error_NombreCorto_test()
+        {
+            var mock = new Mock<ILogger<ReservaController>>();
+            var controller = new ReservaController(_context, mock.Object);
+ 
+            var reservaDto = new ReservaDTO(
+            "Al", "Pérez", "Calle Mayor 1", MetodoPago.TarjetaCredito, 
+            new List<LineaReservaDTO> { new LineaReservaDTO(1, TiempoReserva.UnaHora) }
+            );
+
+             var result = await controller.CreateReserva(reservaDto);
+
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result.Result);
+            var errorMessage = Assert.IsType<string>(badRequestResult.Value);
+            Assert.Equal("¡Error! El nombre debe tener al menos 3 caracteres", errorMessage);
+            }
 
         [Fact]
         [Trait("LevelTesting", "Unit Testing")]
