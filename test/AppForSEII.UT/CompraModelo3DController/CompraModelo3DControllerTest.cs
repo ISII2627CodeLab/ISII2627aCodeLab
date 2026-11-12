@@ -44,12 +44,21 @@ namespace AppForSEII.UT.CompraModelo3DControllerTest
             //el modelo 3D con id 99 no existe en la base de datos
             var modeloInexistente = new CompraModelo3DCreateDTO(_nombre, _apellidos, _correo, _direccion, null,
                 MetodoPago.TarjetaCredito, new List<LineaCompraModelo3DCreateDTO>() { new LineaCompraModelo3DCreateDTO(99, 1) });
+            
+            //NUEVO
+            var nombreClienteNoValido = new CompraModelo3DCreateDTO("Cliente 1", _apellidos, _correo, _direccion, null,
+                MetodoPago.Paypal, lineasValidas);
+            //NUEVO
+                
             var allTests = new List<object[]>
             {
                 new object[] { carritoVacio, "Error: debes comprar al menos un modelo 3D." },
                 new object[] { pagoConBizum, "Error: el método de pago debe ser tarjeta de crédito o PayPal." },
                 new object[] { clienteNoRegistrado, "Error: el cliente no está registrado." },
                 new object[] { modeloInexistente, "El modelo 3D seleccionado no existe." },
+                //NUEVO
+                new object[] { nombreClienteNoValido, $"¡Error! {nombreClienteNoValido.NombreCliente} no es un nombre válido." },
+                //NUEVO
             };
             return allTests;
         }
