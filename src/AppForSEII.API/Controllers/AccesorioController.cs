@@ -62,8 +62,13 @@ public class AccesorioController : ControllerBase
     [Route("[action]/{id}")]
     [ProducesResponseType(typeof(CompraAccesoriosDetailDTO), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+    [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
     public async Task<ActionResult> GetCompraAccesorios(int id)
     {
+         if(id < 0){
+            _logger.LogWarning($"{DateTime.Now} El {id} No puede ser negativo.");
+            return BadRequest($"¡Error! El ID: {id} no puede ser.");
+        }
         var compra = await _context.ComprasAccesorios
             .Include(c => c.LineasCompra)
                 .ThenInclude(l => l.Accesorio)
@@ -91,7 +96,7 @@ public class AccesorioController : ControllerBase
         if (compra == null)
         {
             _logger.LogWarning($"{DateTime.Now} No se encontró la compra con ID {id}.");
-            return NotFound($"No existe ninguna compra de accesorios con el ID {id}.");
+            return NotFound($"¡Error! No existe ningun elemento con ese ID {id}.");
         }
 
         return Ok(compra);

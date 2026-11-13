@@ -8,6 +8,7 @@ using Xunit;
 using AppForSEII.API.Controllers;
 using AppForSEII.API.Models;
 using AppForSEII.API.DTOs.AccesorioDTO;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace AppForSEII.UT.AccesorioController_test;
 
@@ -71,9 +72,28 @@ public class GetCompraAccesoriosTest : AppForSEII4SqliteUT
         var controller = new AccesorioController(_context, mockLogger.Object);
 
         // Act
-        var result = await controller.GetCompraAccesorios(999);
+        var result = await controller.GetCompraAccesorios(0);
 
         // Assert
-        Assert.IsType<NotFoundObjectResult>(result);
+        var okResult = Assert.IsType<NotFoundObjectResult>(result);
+        var BadRequestResult = Assert.IsType<NotFoundObjectResult>(okResult);
+        Assert.Equal("¡Error! No existe ningun elemento con ese ID 0.", BadRequestResult.Value);
+    }
+    [Theory]
+    [InlineData(-1)]
+    [Trait("LevelTesting", "Unit Testing")]
+    public async Task GetCompraAccesorios_BadRequest_test(int invalidID)
+    {
+        // Arrange
+        var mockLogger = new Mock<ILogger<AccesorioController>>();
+        var controller = new AccesorioController(_context, mockLogger.Object);
+
+        // Act
+        var result = await controller.GetCompraAccesorios(invalidID);
+
+        // Assert
+        var okResult = Assert.IsType<BadRequestObjectResult>(result);
+        var BadRequestResult = Assert.IsType<BadRequestObjectResult>(okResult);
+        Assert.Equal("¡Error! El ID: -1 no puede ser.", BadRequestResult.Value);
     }
 }
