@@ -40,6 +40,13 @@ namespace AppForSEII.API.Controllers
                 return BadRequest("La reserva debe contener al menos una impresora.");
             }
 
+            //ejercicio2
+            if (string.IsNullOrEmpty(reservaDTO.NombreCliente) || reservaDTO.NombreCliente.Length < 3)
+            {
+                _logger.LogError($"{DateTime.Now} Exception: El nombre tiene menos de 3 caracteres.");
+                return BadRequest("¡Error! El nombre debe tener al menos 3 caracteres");
+            }
+ 
             decimal precioTotal = 0;
             var lineasReservaEntidad = new List<LineaReserva>();
 
