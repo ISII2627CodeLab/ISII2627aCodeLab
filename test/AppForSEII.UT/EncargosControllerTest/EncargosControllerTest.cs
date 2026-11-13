@@ -38,7 +38,7 @@ namespace AppForSEII.UT.EncargosControllerTest
             var encargoCreateDto = new EncargoCreateDTO(
                 "Juan", 
                 "Perez", 
-                "Calle Mayor 1", 
+                "Calle Mayor 1, España",  //examen original "Calle Mayor 1"
                 "600123456", 
                 "Urgente", 
                 MetodoPago.TarjetaCredito, 
@@ -56,7 +56,7 @@ namespace AppForSEII.UT.EncargosControllerTest
                 DateTime.Now,
                 "Juan",
                 "Perez",
-                "Calle Mayor 1",
+                "Calle Mayor 1, España",  //examen original "Calle Mayor 1"
                 "600123456",
                 MetodoPago.TarjetaCredito,
                 "Urgente",
@@ -93,7 +93,7 @@ namespace AppForSEII.UT.EncargosControllerTest
             var encargoCreateDto = new EncargoCreateDTO(
                 "Juan", 
                 "Perez", 
-                "Calle Mayor 1", 
+                "Calle Mayor 1, España",  //examen original "Calle Mayor 1"
                 "600123456", 
                 "Urgente", 
                 MetodoPago.TarjetaCredito, 
@@ -126,7 +126,7 @@ namespace AppForSEII.UT.EncargosControllerTest
             var encargoCreateDto = new EncargoCreateDTO(
                 "Juan", 
                 "Pérez", 
-                "Calle Mayor 1", 
+                "Calle Mayor 1, España",  //examen original "Calle Mayor 1"
                 "600123456", 
                 "Urgente", 
                 MetodoPago.TarjetaCredito, 
@@ -144,6 +144,39 @@ namespace AppForSEII.UT.EncargosControllerTest
             var problemDetails = Assert.IsType<ValidationProblemDetails>(badRequestResult.Value);
             Assert.True(problemDetails.Errors.ContainsKey("LineasEncargo"));
             Assert.Contains("La pieza o el material seleccionado no existen.", problemDetails.Errors["LineasEncargo"]);
+                    
+        }
+
+        [Fact]
+        [Trait("LevelTesting", "Unit Testing")]
+        public async Task CreateEncargo_DireccionFallida_Error_test()
+        {
+            // Arrange
+            var mock = new Mock<ILogger<EncargosController>>();
+            ILogger<EncargosController> logger = mock.Object;
+
+            // DTO
+            var lineaCreateDto = new LineaEncargoCreateDTO(2, 1, 1);
+            var encargoCreateDto = new EncargoCreateDTO(
+                "Juan", 
+                "Pérez", 
+                "Calle Mayor 1",  //sin España
+                "600123456", 
+                "Urgente", 
+                MetodoPago.TarjetaCredito, 
+                new List<LineaEncargoCreateDTO> {lineaCreateDto}
+            );
+            var controller = new EncargosController(_context, logger);
+
+            // Act
+            var result = await controller.CreateEncargo(encargoCreateDto);
+
+            // Assert
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            var problemDetails = Assert.IsType<ValidationProblemDetails>(badRequestResult.Value);
+            Assert.True(problemDetails.Errors.ContainsKey("DireccionEnvio"));
+            Assert.Contains("¡Error! Solo se realizan envíos dentro de España", problemDetails.Errors["DireccionEnvio"]);
+            
                     
         }
     }
