@@ -14,20 +14,7 @@ namespace AppForMovies.API.Controllers
             _context = context;
             _logger = logger;
         }
-        [HttpGet]
-        [Route("[action]")]
-        [ProducesResponseType(typeof(decimal), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
-        public async Task<ActionResult> ComputeDivision(decimal op1, decimal op2)
-        {
-            if (op2 == 0)
-            {
-                _logger.LogError($"{DateTime.Now} Exception: op2=0, division by 0");
-                return BadRequest("op2 must be different from 0");
-            }
-            decimal result = decimal.Round(op1 / op2, 2);
-            return Ok(result);
-        }
+        
         [HttpGet]
         [Route("[action]")]
         [ProducesResponseType(typeof(IList<Impresora3D>), (int)HttpStatusCode.OK)]
@@ -37,7 +24,7 @@ namespace AppForMovies.API.Controllers
             IList<Impresora3D> impresoras = await _context.Impresoras3Ds
                 .ToListAsync();
             
-            return Ok(impresoras);
+            return Ok(impresoras); 
         }
 
         [HttpGet] 
