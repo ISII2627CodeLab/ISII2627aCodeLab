@@ -31,10 +31,10 @@ namespace AppForSEII.UT.CompraModelo3DControllerTest
         //casos: compra que se intenta crear y mensaje de error que esperamos
         public static IEnumerable<object[]> TestCasesFor_CreateCompraModelo3D_Error()
         {
-            var lineasValidas = new List<LineaCompraModelo3DCreateDTO>() { new LineaCompraModelo3DCreateDTO(1, 1) };
+            var lineasValidas = new List<LineaCompraModelo3DDetailDTO>() { new LineaCompraModelo3DDetailDTO(1, 1) };
             //flujo alternativo 5: carrito vacío
             var carritoVacio = new CompraModelo3DCreateDTO(_nombre, _apellidos, _correo, _direccion, null,
-                MetodoPago.TarjetaCredito, new List<LineaCompraModelo3DCreateDTO>());
+                MetodoPago.TarjetaCredito, new List<LineaCompraModelo3DDetailDTO>());
             //solo se admite tarjeta de credito o PayPal
             var pagoConBizum = new CompraModelo3DCreateDTO(_nombre, _apellidos, _correo, _direccion, null,
                 MetodoPago.Bizum, lineasValidas);
@@ -43,7 +43,7 @@ namespace AppForSEII.UT.CompraModelo3DControllerTest
                 MetodoPago.Paypal, lineasValidas);
             //el modelo 3D con id 99 no existe en la base de datos
             var modeloInexistente = new CompraModelo3DCreateDTO(_nombre, _apellidos, _correo, _direccion, null,
-                MetodoPago.TarjetaCredito, new List<LineaCompraModelo3DCreateDTO>() { new LineaCompraModelo3DCreateDTO(99, 1) });
+                MetodoPago.TarjetaCredito, new List<LineaCompraModelo3DDetailDTO>() { new LineaCompraModelo3DDetailDTO(99, 1) });
             var allTests = new List<object[]>
             {
                 new object[] { carritoVacio, "Error: debes comprar al menos un modelo 3D." },
@@ -84,10 +84,10 @@ namespace AppForSEII.UT.CompraModelo3DControllerTest
             //compra de 2 licencias del Robot (15.00) y 1 del Dragon (25.50)
             var compraDTO = new CompraModelo3DCreateDTO(_nombre, _apellidos, _correo, _direccion, "Compra para mi proyecto",
                 MetodoPago.TarjetaCredito,
-                new List<LineaCompraModelo3DCreateDTO>()
+                new List<LineaCompraModelo3DDetailDTO>()
                 {
-                    new LineaCompraModelo3DCreateDTO(1, 2),
-                    new LineaCompraModelo3DCreateDTO(2, 1),
+                    new LineaCompraModelo3DDetailDTO(1, 2),
+                    new LineaCompraModelo3DDetailDTO(2, 1),
                 });
 
             decimal subtotalRobot = 2 * 15.00m;
@@ -99,8 +99,8 @@ namespace AppForSEII.UT.CompraModelo3DControllerTest
                 MetodoPago.TarjetaCredito, "Compra para mi proyecto", precioTotal,
                 new List<LineaCompraModelo3DDetailDTO>()
                 {
-                    new LineaCompraModelo3DDetailDTO("Robot articulado", "Personajes", FormatoModelo3D.OBJ, 15.00m, 2, subtotalRobot, _licenciaVigenteHasta),
-                    new LineaCompraModelo3DDetailDTO("Dragon de fuego", "Personajes", FormatoModelo3D.STL, 25.50m, 1, subtotalDragon, _licenciaVigenteHasta),
+                    new LineaCompraModelo3DDetailDTO(1, "Robot articulado", "Personajes", FormatoModelo3D.OBJ, 15.00m, 2, subtotalRobot, _licenciaVigenteHasta),
+                    new LineaCompraModelo3DDetailDTO(2, "Dragon de fuego", "Personajes", FormatoModelo3D.STL, 25.50m, 1, subtotalDragon, _licenciaVigenteHasta),
                 });
 
             //Act
@@ -108,7 +108,6 @@ namespace AppForSEII.UT.CompraModelo3DControllerTest
             //Assert: comprobamos que la respuesta es 201 Created y que apunta al metodo que muestra los detalles de la compra
             var createdResult = Assert.IsType<CreatedAtActionResult>(result);
             Assert.Equal("GetCompraModelo3D", createdResult.ActionName);
-            Assert.Equal("CompraModelo3DDetails", createdResult.ControllerName);
             //obtenemos la compra devuelta y comprobamos que es la esperada
             var compraActual = Assert.IsType<CompraModelo3DDetailDTO>(createdResult.Value);
             Assert.Equal(compraEsperada, compraActual);

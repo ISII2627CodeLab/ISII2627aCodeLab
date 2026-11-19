@@ -19,15 +19,8 @@ public class Modelo3DController : ControllerBase
     [Route("[action]")]
     [ProducesResponseType(typeof(IList<Modelo3DParaCompraDTO>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
-    [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
     public async Task<ActionResult> GetModelos3DParaComprar(string? nombre, string? categoria)
     {
-        if (!ModelState.IsValid)
-        {
-            _logger.LogError($"{DateTime.Now} Error: los filtros no son válidos");
-            return BadRequest("Error: los filtros no son válidos.");
-        }
-
         var hoy = DateTime.Now;
         var modelos = await _context.Modelos3D
             .Include(m => m.Licencia)                                  
