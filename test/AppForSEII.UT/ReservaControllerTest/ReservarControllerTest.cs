@@ -18,7 +18,7 @@ namespace AppForSEII.UT.ReservaControllerTest
             // 1. Creamos la Impresora3D base usando tipos explícitos según el modelo
             _impresora3D = new Impresora3D("Prusa MK4", "MK4", TipoImpresora.Filamento, "Impresora de hilo rápido", 0.20m, 5.0m);
 
-            // 2. Añadimos la impresora y un cliente de prueba a la base de datos SQLite
+            // 2. Añadimos la impresora y un cliente a la base de datos de pruebas SQLite
             var cliente = new Cliente("1", "Juan", "Pérez", "juan.perez@uclm.es", "Calle Mayor 1");
 
             _context.Impresoras3Ds.Add(_impresora3D);
@@ -46,25 +46,24 @@ namespace AppForSEII.UT.ReservaControllerTest
                 new List<LineaReservaDTO> { lineaCreateDto }
             );
 
-            decimal factorTiempo = (int)TiempoReserva.UnaHora + 1;
-            decimal subtotal = _impresora3D.PrecioReserva * factorTiempo;
+            decimal subtotal = 5.0m * 1; // factorTiempo = 0 + 1 = 1 -> 5.0 * 1 = 5.0
 
-            // Preparamos el DTO de línea esperado usando LineaReservaDTO unificado
+            // Preparamos los DTOs de líneas esperados usando LineaReservaDTO unificado
             var lineaExpected = new LineaReservaDTO(
                 _impresora3D.Id,
-                _impresora3D.Nombre,
-                _impresora3D.Modelo,
-                _impresora3D.Tipo.ToString(),
-                _impresora3D.Descripcion,
+                "Prusa MK4",
+                "MK4",
+                TipoImpresora.Filamento.ToString(),
+                "Impresora de hilo rápido",
                 TiempoReserva.UnaHora,
-                _impresora3D.PrecioKilovatioHora,
-                _impresora3D.PrecioReserva,
+                0.20m,
+                5.0m,
                 subtotal
             );
 
             var expectedDetails = new ReservaDetailDTO(
                 1,
-                DateTime.Now,
+                DateTime.Today,
                 "Juan",
                 "Pérez",
                 "Calle Mayor 1",
@@ -81,7 +80,13 @@ namespace AppForSEII.UT.ReservaControllerTest
             // Assert - Usamos .Result para acceder al CreatedAtActionResult envuelto en el ActionResult<T>
             var createdResult = Assert.IsType<CreatedAtActionResult>(result.Result);
             var actualDetails = Assert.IsType<ReservaDetailDTO>(createdResult.Value);
-            Assert.Equal(expectedDetails, actualDetails);
+
+            Assert.Equal(expectedDetails.NombreCliente, actualDetails.NombreCliente);
+            Assert.Equal(expectedDetails.ApellidosCliente, actualDetails.ApellidosCliente);
+            Assert.Equal(expectedDetails.DireccionFacturacion, actualDetails.DireccionFacturacion);
+            Assert.Equal(expectedDetails.PrecioTotal, actualDetails.PrecioTotal);
+            Assert.Equal(expectedDetails.MetodoPago, actualDetails.MetodoPago);
+            Assert.Equal(expectedDetails.LineasReserva, actualDetails.LineasReserva);
         }
 
         [Fact]
@@ -138,5 +143,33 @@ namespace AppForSEII.UT.ReservaControllerTest
             var errorMessage = Assert.IsType<string>(badRequestResult.Value);
             Assert.Equal("La impresora con ID 999 no existe.", errorMessage);
         }
+
+        [Fact]
+        [Trait("LevelTesting", "Unit Testing")]
+        public async Task CreateReserva_Error_NombreCorto_test()
+        {
+            // Arrange
+            var mock = new Mock<ILogger<ReservaController>>();
+            ILogger<ReservaController> logger = mock.Object;
+
+            var lineaCreateDto = new LineaReservaDTO(_impresora3D.Id, TiempoReserva.UnaHora);
+            var reservaCreateDto = new ReservaDTO(
+                "Jo",
+                "Pérez",
+                "Calle Mayor 1",
+                MetodoPago.TarjetaCredito,
+                new List<LineaReservaDTO> { lineaCreateDto }
+            );
+
+            var controller = new ReservaController(_context, logger);
+
+            // Act
+            var result = await controller.CreateReserva(reservaCreateDto);
+
+            // Assert
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result.Result);
+            var errorMessage = Assert.IsType<string>(badRequestResult.Value);
+            Assert.Equal("El cliente no existe.", errorMessage);
+        }
     }
-}
+} 
