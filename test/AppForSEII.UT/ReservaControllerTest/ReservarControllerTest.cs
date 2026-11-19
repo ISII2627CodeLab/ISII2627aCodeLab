@@ -11,13 +11,18 @@ namespace AppForSEII.UT.ReservaControllerTest
 {
     public class ReservarControllerTest : AppForSEII4SqliteUT
     {
+        private readonly Impresora3D _impresora3D;
+
         public ReservarControllerTest()
         {
             // 1. Creamos la Impresora3D base usando tipos explícitos según el modelo
-            Impresora3D impresora3D = new Impresora3D("Prusa MK4", "MK4", TipoImpresora.Filamento, "Impresora de hilo rápido", 0.20m, 5.0m);
+            _impresora3D = new Impresora3D("Prusa MK4", "MK4", TipoImpresora.Filamento, "Impresora de hilo rápido", 0.20m, 5.0m);
 
-            // 2. Añadimos la impresora a la base de datos de pruebas SQLite
-            _context.Impresoras3Ds.Add(impresora3D);
+            // 2. Añadimos la impresora y un cliente de prueba a la base de datos SQLite
+            var cliente = new Cliente("1", "Juan", "Pérez", "juan.perez@uclm.es", "Calle Mayor 1");
+
+            _context.Impresoras3Ds.Add(_impresora3D);
+            _context.Users.Add(cliente);
             _context.SaveChanges();
         }
 
@@ -30,28 +35,30 @@ namespace AppForSEII.UT.ReservaControllerTest
             ILogger<ReservaController> logger = mock.Object;
 
             // Creamos el DTO de la línea de reserva
-            var lineaCreateDto = new LineaReservaDTO(1, TiempoReserva.UnaHora);
-            
+            var lineaCreateDto = new LineaReservaDTO(_impresora3D.Id, TiempoReserva.UnaHora);
+
             // Creamos el DTO de la cabecera de la reserva
             var reservaCreateDto = new ReservaDTO(
-                "Juan", 
-                "Pérez", 
-                "Calle Mayor 1", 
-                MetodoPago.TarjetaCredito, 
+                "Juan",
+                "Pérez",
+                "Calle Mayor 1",
+                MetodoPago.TarjetaCredito,
                 new List<LineaReservaDTO> { lineaCreateDto }
             );
 
-            decimal subtotal = 5.0m * 1; // factorTiempo = 0 + 1 = 1 -> 5.0 * 1 = 5.0
+            decimal factorTiempo = (int)TiempoReserva.UnaHora + 1;
+            decimal subtotal = _impresora3D.PrecioReserva * factorTiempo;
 
-            // Preparamos los DTOs de detalles esperados con todos los parámetros requeridos
-            var lineaDetailExpected = new LineaReservaDetailsDTO(
-                "Prusa MK4", 
-                "MK4", 
-                TipoImpresora.Filamento.ToString(), 
-                "Impresora de hilo rápido", 
-                TiempoReserva.UnaHora, 
-                0.20m, 
-                5.0m, 
+            // Preparamos el DTO de línea esperado usando LineaReservaDTO unificado
+            var lineaExpected = new LineaReservaDTO(
+                _impresora3D.Id,
+                _impresora3D.Nombre,
+                _impresora3D.Modelo,
+                _impresora3D.Tipo.ToString(),
+                _impresora3D.Descripcion,
+                TiempoReserva.UnaHora,
+                _impresora3D.PrecioKilovatioHora,
+                _impresora3D.PrecioReserva,
                 subtotal
             );
 
@@ -63,7 +70,7 @@ namespace AppForSEII.UT.ReservaControllerTest
                 "Calle Mayor 1",
                 subtotal,
                 MetodoPago.TarjetaCredito,
-                new List<LineaReservaDetailsDTO> { lineaDetailExpected }
+                new List<LineaReservaDTO> { lineaExpected }
             );
 
             var controller = new ReservaController(_context, logger);
@@ -86,11 +93,11 @@ namespace AppForSEII.UT.ReservaControllerTest
             ILogger<ReservaController> logger = mock.Object;
 
             var reservaCreateDto = new ReservaDTO(
-                "Juan", 
-                "Pérez", 
-                "Calle Mayor 1", 
-                MetodoPago.TarjetaCredito, 
-                new List<LineaReservaDTO>() 
+                "Juan",
+                "Pérez",
+                "Calle Mayor 1",
+                MetodoPago.TarjetaCredito,
+                new List<LineaReservaDTO>()
             );
 
             var controller = new ReservaController(_context, logger);
@@ -114,10 +121,10 @@ namespace AppForSEII.UT.ReservaControllerTest
 
             var lineaCreateDto = new LineaReservaDTO(999, TiempoReserva.UnaHora);
             var reservaCreateDto = new ReservaDTO(
-                "Juan", 
-                "Pérez", 
-                "Calle Mayor 1", 
-                MetodoPago.TarjetaCredito, 
+                "Juan",
+                "Pérez",
+                "Calle Mayor 1",
+                MetodoPago.TarjetaCredito,
                 new List<LineaReservaDTO> { lineaCreateDto }
             );
 
@@ -132,4 +139,4 @@ namespace AppForSEII.UT.ReservaControllerTest
             Assert.Equal("La impresora con ID 999 no existe.", errorMessage);
         }
     }
-} 
+}

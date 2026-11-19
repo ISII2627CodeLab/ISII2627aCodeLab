@@ -63,6 +63,14 @@ namespace AppForSEII.API.Data;
                 logger.LogError(ex, "An error occurred seeding an EncargoImpresion in the Database.");
                 
             }
+            try
+            {
+            SeedImpresora3D(dbContext);
+            }
+            catch (Exception ex)
+            {
+            logger.LogError(ex, "An error occurred seeding the Impresoras3D in the Database.");
+            }
         }
 
         public static void SeedRoles(RoleManager<IdentityRole> roleManager, List<string> roles)
