@@ -36,10 +36,10 @@ namespace AppForSEII.UT.CompraModelo3DDetailsController_test
         public async Task GetCompraModelo3D_NotFound_test()
         {
             //Arrange
-            var mock = new Mock<ILogger<CompraModelo3DDetailsController>>();
-            ILogger<CompraModelo3DDetailsController> logger = mock.Object;
+            var mock = new Mock<ILogger<CompraModelo3DController>>();
+            ILogger<CompraModelo3DController> logger = mock.Object;
 
-            var controller = new CompraModelo3DDetailsController(_context, logger);
+            var controller = new CompraModelo3DController(_context, logger);
 
             //Act
             var result = await controller.GetCompraModelo3D(0);
@@ -55,15 +55,15 @@ namespace AppForSEII.UT.CompraModelo3DDetailsController_test
         public async Task GetCompraModelo3D_Found_test()
         {
             //Arrange
-            var mock = new Mock<ILogger<CompraModelo3DDetailsController>>();
-            ILogger<CompraModelo3DDetailsController> logger = mock.Object;
-            var controller = new CompraModelo3DDetailsController(_context, logger);
+            var mock = new Mock<ILogger<CompraModelo3DController>>();
+            ILogger<CompraModelo3DController> logger = mock.Object;
+            var controller = new CompraModelo3DController(_context, logger);
 
             var expectedCompra = new CompraModelo3DDetailDTO(1, DateTime.Now, "Elena", "Navarro Martínez", "elena@uclm.es",
                         "Calle Cervantes 1", MetodoPago.TarjetaCredito, "Compra para mi proyecto", 55.50m,
                         new List<LineaCompraModelo3DDetailDTO>());
-            expectedCompra.LineasCompra.Add(new LineaCompraModelo3DDetailDTO("Robot articulado", "Personajes", FormatoModelo3D.OBJ, 15.00m, 2, 30.00m, new DateTime(2030, 01, 01)));
-            expectedCompra.LineasCompra.Add(new LineaCompraModelo3DDetailDTO("Dragon de fuego", "Personajes", FormatoModelo3D.STL, 25.50m, 1, 25.50m, new DateTime(2030, 01, 01)));
+            expectedCompra.LineasCompra.Add(new LineaCompraModelo3DDetailDTO(1, "Robot articulado", "Personajes", FormatoModelo3D.OBJ, 15.00m, 2, 30.00m, new DateTime(2030, 01, 01)));
+            expectedCompra.LineasCompra.Add(new LineaCompraModelo3DDetailDTO(2, "Dragon de fuego", "Personajes", FormatoModelo3D.STL, 25.50m, 1, 25.50m, new DateTime(2030, 01, 01)));
 
             //Act
             var result = await controller.GetCompraModelo3D(1);

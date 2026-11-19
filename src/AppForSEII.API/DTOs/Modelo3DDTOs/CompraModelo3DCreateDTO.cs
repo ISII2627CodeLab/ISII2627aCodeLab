@@ -11,10 +11,10 @@ namespace AppForSEII.API.DTOs.Modelo3DDTOs
             ApellidosCliente = string.Empty;
             CorreoElectronico = string.Empty;
             DireccionFacturacion = string.Empty;
-            LineasCompra = new List<LineaCompraModelo3DCreateDTO>();
+            LineasCompra = new List<LineaCompraModelo3DDetailDTO>();
         }
 
-        public CompraModelo3DCreateDTO(string nombreCliente, string apellidosCliente, string correoElectronico, string direccionFacturacion, string? descripcion, MetodoPago metodoPago, List<LineaCompraModelo3DCreateDTO> lineasCompra)
+        public CompraModelo3DCreateDTO(string nombreCliente, string apellidosCliente, string correoElectronico, string direccionFacturacion, string? descripcion, MetodoPago metodoPago, List<LineaCompraModelo3DDetailDTO> lineasCompra)
         {
             NombreCliente = nombreCliente;
             ApellidosCliente = apellidosCliente;
@@ -44,7 +44,7 @@ namespace AppForSEII.API.DTOs.Modelo3DDTOs
         public MetodoPago MetodoPago { get; set; }
 
         [Required(ErrorMessage = "Debe haber al menos un modelo 3D")]
-        public List<LineaCompraModelo3DCreateDTO> LineasCompra { get; set; }
+        public List<LineaCompraModelo3DDetailDTO> LineasCompra { get; set; }
 
         public override bool Equals(object? obj)
         {
