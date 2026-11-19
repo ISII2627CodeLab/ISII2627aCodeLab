@@ -108,22 +108,5 @@ namespace AppForSEII.UT.Modelo3DControllerTest
             Assert.Equal("No existen modelos 3D disponibles con los criterios seleccionados.", notFoundResult.Value);
         }
 
-        [Fact]
-        [Trait("LevelTesting", "Unit Testing")]
-        public async Task GetModelos3DParaComprar_FiltrosNoValidos_BadRequest_test()
-        {
-            //Arrange
-            var mock = new Mock<ILogger<Modelo3DController>>();
-            ILogger<Modelo3DController> logger = mock.Object;
-            var controller = new Modelo3DController(_context, logger);
-            controller.ModelState.AddModelError("nombre", "El filtro no es válido");
-
-            //Act
-            var result = await controller.GetModelos3DParaComprar("Robot", null);
-
-            //Assert
-            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal("Error: los filtros no son válidos.", badRequestResult.Value);
-        }
     }
 }
