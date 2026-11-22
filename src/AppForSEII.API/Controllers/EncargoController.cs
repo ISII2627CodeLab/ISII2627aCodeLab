@@ -25,6 +25,16 @@ namespace AppForSEII.API.Controllers
             [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
             public async Task<ActionResult> CreateEncargo([FromBody] EncargoCreateDTO encargoDTO)
             {
+                var clienteExiste = await _context.Users
+                    .OfType<Cliente>()
+                    .AnyAsync(c => c.Name == encargoDTO.NombreCliente && c.Surname == encargoDTO.ApellidosCliente);
+
+                if (!clienteExiste)
+                {
+                    _logger.LogError($"{DateTime.Now} Error: El cliente no existe en la base de datos.");
+                    ModelState.AddModelError("Cliente", "El cliente especificado no existe.");
+                }
+        
                 if (encargoDTO.LineasEncargo == null || !encargoDTO.LineasEncargo.Any())
                 {
                     _logger.LogError($"{DateTime.Now} Error: El encargo no contiene lineas.");
@@ -115,7 +125,7 @@ namespace AppForSEII.API.Controllers
                 encargo.MetodoPago,
                 encargo.Descripcion,
                 encargo.PrecioTotal,
-                encargo.LineasEncargo.Select(le => new LineaEncargoDetailsDTO(
+                encargo.LineasEncargo.Select(le => new LineaEncargoDTO(
                     le.Pieza.Nombre,
                     le.MaterialSeleccionado.Nombre,
                     le.Cantidad,

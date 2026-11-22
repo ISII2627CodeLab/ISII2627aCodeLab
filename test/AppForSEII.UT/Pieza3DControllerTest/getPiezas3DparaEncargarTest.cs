@@ -13,9 +13,9 @@ namespace AppForSEII.UT.Pieza3DControllerTest
             var material1 = new Material("PLA", 0.05m, 5000.0m);
             var material2 = new Material("ABS", 0.07m, 3000.0m);
             var piezas3D = new List<Pieza3D>(){
-                new Pieza3D("Dragon Mini", "Miniatura detallada de un dragón", 45.5, 12.50m, CategoriaPieza.MiniaturasYMaquetas),
-                new Pieza3D("Soporte Móvil", "Soporte de escritorio", 150.0, 8.99m, CategoriaPieza.HerramientasYAccesorios),
-                new Pieza3D("Vaso de Adorno", "Pieza decorativa para recipientes", 20.0, 4.50m, CategoriaPieza.Decoracion)
+                new Pieza3D("Dragon Mini", "Miniatura detallada de un dragón", 45.5, 12, CategoriaPieza.MiniaturasYMaquetas),
+                new Pieza3D("Soporte Móvil", "Soporte de escritorio", 150.0, 9, CategoriaPieza.HerramientasYAccesorios),
+                new Pieza3D("Vaso de Adorno", "Pieza decorativa para recipientes", 20.0, 5, CategoriaPieza.Decoracion)
             } ;
 
         _context.AddRange(piezas3D);
@@ -24,9 +24,9 @@ namespace AppForSEII.UT.Pieza3DControllerTest
 
         public static IEnumerable<object?[]> TestCasesFor_GetPiezas3D()
         {
-            var p1 = new Pieza3DSelectDTO(1, "Dragon Mini", "Miniatura detallada de un dragón", 45.5, 12.50m, CategoriaPieza.MiniaturasYMaquetas, "PLA");
-            var p2 = new Pieza3DSelectDTO(2, "Soporte Móvil", "Soporte de escritorio", 150.0, 8.99m, CategoriaPieza.HerramientasYAccesorios, "ABS");
-            var p3 = new Pieza3DSelectDTO(3, "Vaso de Adorno", "Pieza decorativa para recipientes", 20.0, 4.50m, CategoriaPieza.Decoracion, "PLA");
+            var p1 = new Pieza3DSelectDTO(1, "Dragon Mini", "Miniatura detallada de un dragón", 45.5, 12, CategoriaPieza.MiniaturasYMaquetas, "PLA");
+            var p2 = new Pieza3DSelectDTO(2, "Soporte Móvil", "Soporte de escritorio", 150.0, 9, CategoriaPieza.HerramientasYAccesorios, "ABS");
+            var p3 = new Pieza3DSelectDTO(3, "Vaso de Adorno", "Pieza decorativa para recipientes", 20.0, 5, CategoriaPieza.Decoracion, "PLA");
 
             var allPieces = new List<Pieza3DSelectDTO> { p1, p2, p3 };
             var filterByName = new List<Pieza3DSelectDTO> { p1 }; 

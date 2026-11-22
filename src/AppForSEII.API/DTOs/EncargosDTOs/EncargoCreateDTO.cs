@@ -11,10 +11,10 @@ namespace AppForSEII.API.DTOs.EncargoDTOs
             ApellidosCliente = string.Empty;
             DireccionEnvio = string.Empty;
             NumeroTelefono = string.Empty;
-            LineasEncargo = new List<LineaEncargoCreateDTO>();
+            LineasEncargo = new List<LineaEncargoDTO>();
         }
 
-        public EncargoCreateDTO(string nombreCliente, string apellidosCliente, string direccionEnvio, string numeroTelefono, string? descripcion, MetodoPago metodoPago, List<LineaEncargoCreateDTO> lineasEncargo)
+        public EncargoCreateDTO(string nombreCliente, string apellidosCliente, string direccionEnvio, string numeroTelefono, string? descripcion, MetodoPago metodoPago, List<LineaEncargoDTO> lineasEncargo)
         {
             NombreCliente = nombreCliente;
             ApellidosCliente = apellidosCliente;
@@ -43,7 +43,7 @@ namespace AppForSEII.API.DTOs.EncargoDTOs
         public MetodoPago MetodoPago { get; set; }
 
         [Required(ErrorMessage = "Debe haber al menos una línea de encargo")]
-        public List<LineaEncargoCreateDTO> LineasEncargo { get; set; }
+        public List<LineaEncargoDTO> LineasEncargo { get; set; }
 
         public override bool Equals(object? obj)
         {

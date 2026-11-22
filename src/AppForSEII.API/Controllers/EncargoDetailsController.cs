@@ -49,7 +49,7 @@ namespace AppForSEII.API.Controllers
                 encargo.MetodoPago,
                 encargo.Descripcion,
                 encargo.PrecioTotal,
-                encargo.LineasEncargo.Select(le => new LineaEncargoDetailsDTO(
+                encargo.LineasEncargo.Select(le => new LineaEncargoDTO(
                     le.Pieza.Nombre,
                     le.MaterialSeleccionado.Nombre,
                     le.Cantidad,

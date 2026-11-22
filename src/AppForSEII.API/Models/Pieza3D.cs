@@ -11,12 +11,12 @@ public class Pieza3D
         PiezaMaterials = new List<PiezaMaterial>();
     }
 
-    public Pieza3D(string nombre, string descripcion, double pesoGramos, decimal precioEstimado, CategoriaPieza categoria)
+    public Pieza3D(string nombre, string descripcion, double pesoGramos, int cantidad, CategoriaPieza categoria)
     : this(){
         Nombre = nombre;
         Descripcion = descripcion;
         PesoGramos = pesoGramos;
-        PrecioEstimado = precioEstimado;
+        Cantidad = cantidad;
         Categoria = categoria;
         
         
@@ -39,9 +39,8 @@ public class Pieza3D
     public double PesoGramos { get; set; }
 
     [Required]
-    [Precision(5, 2)]
-    [Range(0.01, 999.99, ErrorMessage = "El precio debe ser mayor a 0.")]
-    public decimal PrecioEstimado { get; set; }
+    [Range(1, 10000, ErrorMessage = "La cantidad debe ser mayor o igual a 1.")]
+    public int Cantidad { get; set; }
     public CategoriaPieza Categoria { get; set; }
 
     // Relaciones

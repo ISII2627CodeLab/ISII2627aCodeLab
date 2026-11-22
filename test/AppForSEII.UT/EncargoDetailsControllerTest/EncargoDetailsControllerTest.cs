@@ -11,7 +11,7 @@ namespace AppForSEII.UT.EncargoDetailsControllerTest
             //insertamos los datos necesarios en la BD de prueba 
             // para que el Include y el where del controlador los encuentren al buscar por ID = 1.
             var material = new Material("PLA", 0.05m, 5000.0m);
-            var pieza3D = new Pieza3D("Dragon Mini", "Miniatura detallada de un dragón", 45.5, 12.50m, CategoriaPieza.MiniaturasYMaquetas);
+            var pieza3D = new Pieza3D("Dragon Mini", "Miniatura detallada de un dragón", 45.5, 12, CategoriaPieza.MiniaturasYMaquetas);
             
             var encargo = new EncargoImpresion(
                 new DateTime(2026, 5, 10, 10, 0, 0),
@@ -53,7 +53,7 @@ namespace AppForSEII.UT.EncargoDetailsControllerTest
             decimal subtotal = precioUnidad * 2;
 
             //preparar el DTO de detalles esperado
-            var lineaDetailExpected = new LineaEncargoDetailsDTO("Dragon Mini", "PLA", 2, precioUnidad, subtotal, "Urgente");
+            var lineaDetailExpected = new LineaEncargoDTO("Dragon Mini", "PLA", 2, precioUnidad, subtotal, "Urgente");
             var expectedDetails = new EncargoDetailsDTO(
                 1,
                 new DateTime(2026, 5, 10, 10, 0, 0),
@@ -64,7 +64,7 @@ namespace AppForSEII.UT.EncargoDetailsControllerTest
                 MetodoPago.TarjetaCredito,
                 "Urgente",
                 subtotal,
-                new List<LineaEncargoDetailsDTO> {lineaDetailExpected}
+                new List<LineaEncargoDTO> {lineaDetailExpected}
             );
 
             var controller = new EncargoDetailsController(_context, logger);
