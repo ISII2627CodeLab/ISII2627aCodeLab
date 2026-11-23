@@ -4,9 +4,17 @@ namespace AppForSEII.API.DTOs.ApplicationUserDTOs.Impresoras3DDTOs
 {
     public class ReservaDetailDTO
     {
-        public ReservaDetailDTO(int id, DateTime fechaReserva, string nombreCliente, string apellidosCliente, string direccionFacturacion, decimal precioTotal, MetodoPago metodoPago, List<LineaReservaDetailsDTO> lineasReserva)
+        public ReservaDetailDTO(
+            int id,
+            DateTime fechaReserva,
+            string nombreCliente,
+            string apellidosCliente,
+            string direccionFacturacion,
+            decimal precioTotal,
+            MetodoPago metodoPago,
+            List<LineaReservaDTO> lineasReserva)
         {
-            Id = id;
+            Id = id; 
             FechaReserva = fechaReserva;
             NombreCliente = nombreCliente;
             ApellidosCliente = apellidosCliente;
@@ -23,21 +31,6 @@ namespace AppForSEII.API.DTOs.ApplicationUserDTOs.Impresoras3DDTOs
         public string DireccionFacturacion { get; set; }
         public decimal PrecioTotal { get; set; }
         public MetodoPago MetodoPago { get; set; }
-        public List<LineaReservaDetailsDTO> LineasReserva { get; set; }
-
-        public override bool Equals(object? obj)
-        {
-            return obj is ReservaDetailDTO dto &&
-                   Id == dto.Id &&
-                   NombreCliente == dto.NombreCliente &&
-                   ApellidosCliente == dto.ApellidosCliente &&
-                   PrecioTotal == dto.PrecioTotal &&
-                   MetodoPago == dto.MetodoPago;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id, NombreCliente, ApellidosCliente, PrecioTotal, MetodoPago);
-        }
+        public List<LineaReservaDTO> LineasReserva { get; set; }
     }
-} 
+}

@@ -4,7 +4,7 @@ namespace AppForSEII.API.DTOs.EncargoDTOs
 {
     public class EncargoDetailsDTO
     {
-        public EncargoDetailsDTO(int id, DateTime fechaEncargo, string nombreCliente, string apellidosCliente, string direccionEnvio, string numeroTelefono, MetodoPago metodoPago, string? descripcion, decimal precioTotal, List<LineaEncargoDetailsDTO> lineasEncargo)
+        public EncargoDetailsDTO(int id, DateTime fechaEncargo, string nombreCliente, string apellidosCliente, string direccionEnvio, string numeroTelefono, MetodoPago metodoPago, string? descripcion, decimal precioTotal, List<LineaEncargoDTO> lineasEncargo)
         {
             Id = id;
             FechaEncargo = fechaEncargo;
@@ -27,7 +27,7 @@ namespace AppForSEII.API.DTOs.EncargoDTOs
         public MetodoPago MetodoPago { get; set; }
         public string? Descripcion { get; set; }
         public decimal PrecioTotal { get; set; }
-        public List<LineaEncargoDetailsDTO> LineasEncargo { get; set; }
+        public List<LineaEncargoDTO> LineasEncargo { get; set; }
 
         public override bool Equals(object? obj)
         {

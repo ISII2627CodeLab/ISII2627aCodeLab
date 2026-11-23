@@ -39,7 +39,7 @@ namespace AppForSEII.API.Controllers
                         p.Nombre, 
                         p.Descripcion, 
                         p.PesoGramos, 
-                        p.PrecioEstimado, 
+                        p.Cantidad, 
                         p.Categoria,
                         p.PiezaMaterials.FirstOrDefault() != null ? p.PiezaMaterials.First().Material.Nombre : "Sin material"
                     ))

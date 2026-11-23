@@ -8,13 +8,13 @@ namespace AppForSEII.API.DTOs.Pieza3DDTOs
             Descripcion = string.Empty;
             MaterialNombre = string.Empty;
         }
-        public Pieza3DSelectDTO(int id, string nombre, string descripcion, double pesoGramos, decimal precioEstimado, CategoriaPieza categoria, string materialNombre)
+        public Pieza3DSelectDTO(int id, string nombre, string descripcion, double pesoGramos, int cantidad, CategoriaPieza categoria, string materialNombre)
         {
             Id = id;
             Nombre = nombre;
             Descripcion = descripcion;
             PesoGramos = pesoGramos;
-            PrecioEstimado = precioEstimado;
+            Cantidad = cantidad;
             Categoria = categoria;
             MaterialNombre = materialNombre;
         }
@@ -23,19 +23,19 @@ namespace AppForSEII.API.DTOs.Pieza3DDTOs
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
         public double PesoGramos { get; set; }
-        public decimal PrecioEstimado { get; set; }
+        public int Cantidad { get; set; }
         public CategoriaPieza Categoria { get; set; }
         public string MaterialNombre { get; set; }
 
           public override bool Equals(object? obj){
             if (obj is Pieza3DSelectDTO otro){
-                return Id == otro.Id && Nombre == otro.Nombre && PrecioEstimado == otro.PrecioEstimado;
+                return Id == otro.Id && Nombre == otro.Nombre && Cantidad == otro.Cantidad;
             }
             return false;
         }
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id, Nombre, Descripcion, PesoGramos, PrecioEstimado, Categoria, MaterialNombre);
+            return HashCode.Combine(Id, Nombre, Descripcion, PesoGramos, Cantidad, Categoria, MaterialNombre);
         }
     }
 }

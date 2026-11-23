@@ -63,6 +63,14 @@ namespace AppForSEII.API.Data;
                 logger.LogError(ex, "An error occurred seeding an EncargoImpresion in the Database.");
                 
             }
+            try
+            {
+            SeedImpresora3D(dbContext);
+            }
+            catch (Exception ex)
+            {
+            logger.LogError(ex, "An error occurred seeding the Impresoras3D in the Database.");
+            }
         }
 
         public static void SeedRoles(RoleManager<IdentityRole> roleManager, List<string> roles)
@@ -163,7 +171,7 @@ namespace AppForSEII.API.Data;
 
             if (dbContext.Piezas3D.FirstOrDefault(p => p.Nombre == "Soporte Auriculares") == null)
             {
-                var pieza = new Pieza3D("Soporte Auriculares", "Soporte para auriculares", 150.0, 15.0m, CategoriaPieza.HerramientasYAccesorios);
+                var pieza = new Pieza3D("Soporte Auriculares", "Soporte para auriculares", 150.0, 15, CategoriaPieza.HerramientasYAccesorios);
                 dbContext.Piezas3D.Add(pieza);
         
                 // Cambiado esto por cambio en el Cu. En vez de pieza.Material = pla, usamos PiezaMaterial
@@ -179,7 +187,7 @@ namespace AppForSEII.API.Data;
 
             if (dbContext.Piezas3D.FirstOrDefault(p => p.Nombre == "Figura Dragon") == null)
             {
-                var pieza = new Pieza3D("Figura Dragon", "Figura decorativa de dragón", 80.0, 10.0m, CategoriaPieza.Decoracion);
+                var pieza = new Pieza3D("Figura Dragon", "Figura decorativa de dragón", 80.0, 10, CategoriaPieza.Decoracion);
                 dbContext.Piezas3D.Add(pieza);
                 
                 //aqui tamb cambio
