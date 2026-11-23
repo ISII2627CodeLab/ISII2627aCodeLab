@@ -13,9 +13,11 @@ namespace AppForSEII.UT.EncargosControllerTest
     {
         public CreateEncargoTest()
         {
+            Cliente clientePrueba = new Cliente("1", "Juan", "Perez", "juan@uclm.es", "Calle Mayor 1");
+            _context.Users.Add(clientePrueba);
             // 1. Creamos el material y la pieza 3D usando tipos explícitos
             Material material = new Material("PLA", 0.05m, 5000.0m);
-            Pieza3D pieza3D = new Pieza3D("Dragon Mini", "Miniatura detallada de un dragón", 45.5, 12.50m, CategoriaPieza.MiniaturasYMaquetas);
+            Pieza3D pieza3D = new Pieza3D("Dragon Mini", "Miniatura detallada de un dragón", 45.5, 12, CategoriaPieza.MiniaturasYMaquetas);
 
             // 2. Creamos la relación en la tabla intermedia usando el constructor
             PiezaMaterial piezaMaterial = new PiezaMaterial(pieza3D, material);
@@ -34,7 +36,7 @@ namespace AppForSEII.UT.EncargosControllerTest
             var mock = new Mock<ILogger<EncargosController>>();
             ILogger<EncargosController> logger = mock.Object;
 
-            var lineaCreateDto = new LineaEncargoCreateDTO(2, 1, 1);//creamos el DTO de entrada para el encargo
+            var lineaCreateDto = new LineaEncargoDTO(2, 1, 1);//creamos el DTO de entrada para el encargo
             var encargoCreateDto = new EncargoCreateDTO(
                 "Juan", 
                 "Perez", 
@@ -42,7 +44,7 @@ namespace AppForSEII.UT.EncargosControllerTest
                 "600123456", 
                 "Urgente", 
                 MetodoPago.TarjetaCredito, 
-                new List<LineaEncargoCreateDTO> { lineaCreateDto }
+                new List<LineaEncargoDTO> { lineaCreateDto }
             );
 
             
@@ -50,7 +52,7 @@ namespace AppForSEII.UT.EncargosControllerTest
             decimal subtotal = precioUnidad * 2;
 
             //preparamos el DTO de detalles esperado (Id = 1 por ser el primer registro guardado)
-            var lineaDetailExpected = new LineaEncargoDetailsDTO("Dragon Mini", "PLA", 2, precioUnidad, subtotal, "Urgente");
+            var lineaDetailExpected = new LineaEncargoDTO("Dragon Mini", "PLA", 2, precioUnidad, subtotal, "Urgente");
             var expectedDetails = new EncargoDetailsDTO(
                 1,
                 DateTime.Now,
@@ -61,7 +63,7 @@ namespace AppForSEII.UT.EncargosControllerTest
                 MetodoPago.TarjetaCredito,
                 "Urgente",
                 subtotal,
-                new List<LineaEncargoDetailsDTO> { lineaDetailExpected }
+                new List<LineaEncargoDTO> { lineaDetailExpected }
             );
 
             var controller = new EncargosController(_context, logger);
@@ -97,7 +99,7 @@ namespace AppForSEII.UT.EncargosControllerTest
                 "600123456", 
                 "Urgente", 
                 MetodoPago.TarjetaCredito, 
-                new List<LineaEncargoCreateDTO>() 
+                new List<LineaEncargoDTO>() 
             );
 
             var controller = new EncargosController(_context, logger);
@@ -122,7 +124,7 @@ namespace AppForSEII.UT.EncargosControllerTest
             ILogger<EncargosController> logger = mock.Object;
 
             // DTO apuntando a Ids que no existen en la base de datos, 999 p.e.
-            var lineaCreateDto = new LineaEncargoCreateDTO(1, 999, 999);
+            var lineaCreateDto = new LineaEncargoDTO(1, 999, 999);
             var encargoCreateDto = new EncargoCreateDTO(
                 "Juan", 
                 "Pérez", 
@@ -130,7 +132,7 @@ namespace AppForSEII.UT.EncargosControllerTest
                 "600123456", 
                 "Urgente", 
                 MetodoPago.TarjetaCredito, 
-                new List<LineaEncargoCreateDTO> {lineaCreateDto}
+                new List<LineaEncargoDTO> {lineaCreateDto}
             );
             var controller = new EncargosController(_context, logger);
 
@@ -145,6 +147,73 @@ namespace AppForSEII.UT.EncargosControllerTest
             Assert.True(problemDetails.Errors.ContainsKey("LineasEncargo"));
             Assert.Contains("La pieza o el material seleccionado no existen.", problemDetails.Errors["LineasEncargo"]);
                     
+        }
+
+        [Fact]
+        [Trait("LevelTesting", "Unit Testing")]
+        public async Task CreateEncargo_ClienteNotFound_Error_test()
+        {
+            // Arrange
+            var mock = new Mock<ILogger<EncargosController>>();
+            ILogger<EncargosController> logger = mock.Object;
+
+            var lineaCreateDto = new LineaEncargoDTO(1, 1, 1);
+            
+            var encargoCreateDto = new EncargoCreateDTO(
+                "ClienteInexistente", 
+                "ApellidoFalso", 
+                "Calle Mayor", 
+                "6213395686", 
+                "Urgente", 
+                MetodoPago.TarjetaCredito, 
+                new List<LineaEncargoDTO> { lineaCreateDto }
+            );
+
+            var controller = new EncargosController(_context, logger);
+
+            // Act
+            var result = await controller.CreateEncargo(encargoCreateDto);
+
+            // Assert
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            var problemDetails = Assert.IsType<ValidationProblemDetails>(badRequestResult.Value);
+            Assert.True(problemDetails.Errors.ContainsKey("Cliente"));
+            Assert.Contains("El cliente especificado no existe.", problemDetails.Errors["Cliente"]);
+        }
+
+        [Fact]
+        [Trait("LevelTesting", "Unit Testing")]
+        public async Task CreateEncargo_InvalidMaterialForPiece_Error_test()
+        {
+            // Arrange
+            var mock = new Mock<ILogger<EncargosController>>();
+            ILogger<EncargosController> logger = mock.Object;
+
+            var materialExtra = new Material("PETG", 0.08m, 3000.0m);
+            _context.Materiales.Add(materialExtra);
+            _context.SaveChanges();
+
+            var lineaCreateDto = new LineaEncargoDTO(1, 1, materialExtra.Id);
+            var encargoCreateDto = new EncargoCreateDTO(
+                "Juan", 
+                "Perez", 
+                "Calle Mayor 1", 
+                "600123456", 
+                "Urgente", 
+                MetodoPago.TarjetaCredito, 
+                new List<LineaEncargoDTO> { lineaCreateDto }
+            );
+
+            var controller = new EncargosController(_context, logger);
+
+            // Act
+            var result = await controller.CreateEncargo(encargoCreateDto);
+
+            // Assert
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            var problemDetails = Assert.IsType<ValidationProblemDetails>(badRequestResult.Value);
+            Assert.True(problemDetails.Errors.ContainsKey("LineasEncargo"));
+            Assert.Contains("El material no es válido para la pieza.", problemDetails.Errors["LineasEncargo"]);
         }
     }
 }

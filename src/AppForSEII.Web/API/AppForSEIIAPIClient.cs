@@ -2115,7 +2115,7 @@ namespace AppForSEII.Web.API
 
         [Newtonsoft.Json.JsonProperty("lineasEncargo", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
-        public System.Collections.Generic.ICollection<LineaEncargoCreateDTO> LineasEncargo { get; set; } = new System.Collections.ObjectModel.Collection<LineaEncargoCreateDTO>();
+        public System.Collections.Generic.ICollection<LineaEncargoDTO> LineasEncargo { get; set; } = new System.Collections.ObjectModel.Collection<LineaEncargoDTO>();
 
     }
 
@@ -2152,7 +2152,7 @@ namespace AppForSEII.Web.API
         public double PrecioTotal { get; set; }
 
         [Newtonsoft.Json.JsonProperty("lineasEncargo", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<LineaEncargoDetailsDTO> LineasEncargo { get; set; }
+        public System.Collections.Generic.ICollection<LineaEncargoDTO> LineasEncargo { get; set; }
 
     }
 
@@ -2285,33 +2285,24 @@ namespace AppForSEII.Web.API
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.8.0.0 (NJsonSchema v11.6.2.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class LineaEncargoCreateDTO
+    public partial class LineaEncargoDTO
     {
 
         [Newtonsoft.Json.JsonProperty("cantidad", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(1, 100)]
         public int Cantidad { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("pieza3DId", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("pieza3DId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int Pieza3DId { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("materialId", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("materialId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int MaterialId { get; set; }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.8.0.0 (NJsonSchema v11.6.2.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class LineaEncargoDetailsDTO
-    {
 
         [Newtonsoft.Json.JsonProperty("nombrePieza", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string NombrePieza { get; set; }
 
         [Newtonsoft.Json.JsonProperty("materialNombre", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string MaterialNombre { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("cantidad", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Cantidad { get; set; }
 
         [Newtonsoft.Json.JsonProperty("precioUnidad", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double PrecioUnidad { get; set; }
@@ -2453,8 +2444,8 @@ namespace AppForSEII.Web.API
         [Newtonsoft.Json.JsonProperty("pesoGramos", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double PesoGramos { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("precioEstimado", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double PrecioEstimado { get; set; }
+        [Newtonsoft.Json.JsonProperty("cantidad", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int Cantidad { get; set; }
 
         [Newtonsoft.Json.JsonProperty("categoria", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]

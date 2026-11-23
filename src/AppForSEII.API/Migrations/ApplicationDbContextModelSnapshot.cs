@@ -297,9 +297,11 @@ namespace AppForSEII.API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("PrecioKilovatioHora")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("PrecioReserva")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Tipo")
@@ -450,6 +452,7 @@ namespace AppForSEII.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("PrecioSubtotal")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int?>("ReservaImpresoraId")
@@ -536,6 +539,9 @@ namespace AppForSEII.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
                     b.Property<int>("Categoria")
                         .HasColumnType("int");
 
@@ -551,10 +557,6 @@ namespace AppForSEII.API.Migrations
 
                     b.Property<double>("PesoGramos")
                         .HasColumnType("float");
-
-                    b.Property<decimal>("PrecioEstimado")
-                        .HasPrecision(5, 2)
-                        .HasColumnType("decimal(5,2)");
 
                     b.HasKey("Id");
 
@@ -606,6 +608,7 @@ namespace AppForSEII.API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("PrecioTotal")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
