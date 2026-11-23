@@ -6,7 +6,7 @@ using AppForSEII.Web.Components;
 using AppForSEII.Web.Components.Account;
 using AppForSEII.Web.Data;
 using AppForSEII.Web.API;
-
+using AppForSEII.Web;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -93,6 +93,8 @@ else
 }
 app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
 app.UseHttpsRedirection();
+
+builder.Services.AddScoped<CompraModelo3DStateContainer>();
 
 app.UseAntiforgery();
 
