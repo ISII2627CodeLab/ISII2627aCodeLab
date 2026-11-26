@@ -1,0 +1,156 @@
+@page "/encargos/listpiezas3dparaencargar"
+@using AppForSEII.Web.API
+@inject IAppForSEIIAPIClient apiservice
+@inject NavigationManager navigation
+@inject EncargoStateContainer encargoState
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+@* 1. Header *@
+<PageTitle>Encargar Piezas 3D</PageTitle>
+<h3>Piezas 3D disponibles para encargar</h3>
+
+@* 2. Filters *@
+<div class="row mb-3">
+    <div class="col-md-4">
+        <label for="nombreFiltro" class="form-label">Filtrar por nombre:</label>
+        <input type="text" id="nombreFiltro" class="form-control" @bind="nombreFiltro" placeholder="Nombre de la pieza..." />
+    </div>
+    <div class="col-md-4">
+        <label for="categoriaFiltro" class="form-label">Categoría:</label>
+        <select id="categoriaFiltro" class="form-select" @bind="categoriaFiltro">
+            <option value="">Todas las categorías</option>
+            <option value="Decoracion">Decoración</option>
+            <option value="MiniaturasYMaquetas">Miniaturas y Maquetas</option>
+            <option value="Repuestos">Repuestos</option>
+            <option value="HerramientasYAccesorios">Herramientas y Accesorios</option>
+        </select>
+    </div>
+    <div class="col-md-4 d-flex align-items-end">
+        <button class="btn btn-primary w-100" @onclick="SearchPiezas">Buscar piezas</button>
+    </div>
+</div>
+
+@* 3. Results *@
+<div class="row">
+    <!-- Tabla de piezas disponibles -->
+    <div class="col-md-8">
+        <h4>Piezas disponibles</h4>
+        <p>Número de piezas disponibles: @(piezas?.Count ?? 0)</p>
+
+        @if (piezas == null)
+        {
+            <p>Cargando piezas...</p>
+        }
+        else if (!piezas.Any())
+        {
+            <p>No se encontraron piezas disponibles con esos criterios.</p>
+        }
+        else
+        {
+            <table class="table table-striped" id="TableOfPiezas">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Categoría</th>
+                        <th>Peso (g)</th>
+                        <th>Cantidad</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var pieza in piezas)
+                    {
+                        <tr>
+                            <td>@pieza.Nombre</td>
+                            <td>@pieza.Categoria</td>
+                            <td>@pieza.PesoGramos</td>
+                            <td>@pieza.Cantidad</td>
+                            <td>
+                                <button class="btn btn-success btn-sm" @onclick="() => AñadirPieza(pieza)">
+                                    Añadir
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+
+    <!-- Panel del Carrito / Encargo actual -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-secondary text-white">
+                <h5>Tu Encargo</h5>
+            </div>
+            <div class="card-body">
+                @if (!encargoState.Encargo.LineasEncargo.Any())
+                {
+                    <p class="text-muted">No has seleccionado ninguna pieza todavía.</p>
+                }
+                else
+                {
+                    <ul class="list-group mb-3">
+                        @foreach (var linea in encargoState.Encargo.LineasEncargo)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>@linea.NombrePieza</strong><br />
+                                    <small>Cant: @linea.Cantidad</small>
+                                </div>
+                                <button class="btn btn-danger btn-sm" @onclick="() => EliminarLinea(linea)">X</button>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@* 4. Actions *@
+<div class="mt-4">
+    <button class="btn btn-primary btn-lg" @onclick="FinalizarEncargo" disabled="@(!encargoState.Encargo.LineasEncargo.Any())">
+        Finalizar encargo
+    </button>
+</div>
+
+@code {
+    private ICollection<Pieza3DSelectDTO>? piezas { get; set; } = new List<Pieza3DSelectDTO>();
+    private string? nombreFiltro;
+    private CategoriaPieza? categoriaFiltro;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await SearchPiezas();
+    }
+
+    protected async Task SearchPiezas()
+    {
+        try
+        {
+            piezas = await apiservice.GetPiezas3DAsync(nombreFiltro, categoriaFiltro);
+        }
+        catch (ApiException)
+        {
+            piezas = new List<Pieza3DSelectDTO>();
+        }
+        StateHasChanged();
+    }
+
+    private void AñadirPieza(Pieza3DSelectDTO pieza)
+    {
+        encargoState.AddPiezaToEncargo(pieza);
+    }
+
+    private void EliminarLinea(LineaEncargoDTO linea)
+    {
+        encargoState.RemovePiezaFromEncargo(linea);
+    }
+
+    private void FinalizarEncargo()
+    {
+        navigation.NavigateTo("/encargos/createencargo");
+    }
+}
