@@ -80,6 +80,7 @@ builder.Services.AddScoped<IAppForSEIIAPIClient>(sp => new AppForSEIIAPIClient(U
 
 builder.Services.AddScoped<EncargoStateContainer>();
 
+builder.Services.AddScoped<CompraModelo3DStateContainer>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -95,6 +96,7 @@ else
 }
 app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
 app.UseHttpsRedirection();
+
 
 app.UseAntiforgery();
 
