@@ -77,7 +77,7 @@ string? URI2API = builder.Configuration.GetValue(typeof(string), "AppForSEIIAPIC
 
 //the environment variable URI2API is defined in appsettings.json
 builder.Services.AddScoped<IAppForSEIIAPIClient>(sp => new AppForSEIIAPIClient(URI2API!, new HttpClient()));
-
+builder.Services.AddScoped<CompraModelo3DStateContainer>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -94,7 +94,6 @@ else
 app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
 app.UseHttpsRedirection();
 
-builder.Services.AddScoped<CompraModelo3DStateContainer>();
 
 app.UseAntiforgery();
 
