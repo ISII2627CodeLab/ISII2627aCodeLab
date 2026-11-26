@@ -1,0 +1,186 @@
+@page "/reservas/selectimpresorasforreserva"
+@using AppForSEII.Web.API
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+@inject IAppForSEIIAPIClient apiservice
+@inject NavigationManager Navigation
+
+<PageTitle>Reservar impresoras</PageTitle>
+
+<div class="container">
+    <h3>Seleccionar impresoras 3D para reservar</h3>
+
+    @* 1. Filtros (Flujo Alternativo 2.2: Nombre y Tipo) *@
+    <div class="row g-2 mb-3">
+        <div class="col-md-5">
+            <input type="text" class="form-control" placeholder="Filtrar por nombre..." @bind="nombreFiltro" id="inputNombre" />
+        </div>
+        <div class="col-md-4">
+            <select class="form-select" @bind="tipoSeleccionado" id="selectTipo">
+                <option value="">Todos los tipos</option>
+                <option value="@TipoImpresora.Filamento">Filamento</option>
+                <option value="@TipoImpresora.Resina">Resina</option>
+                <option value="@TipoImpresora.Polimero">Polímero</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <button type="button" class="btn btn-primary w-100" @onclick="BuscarImpresoras" id="btnBuscar">
+                Buscar
+            </button>
+        </div>
+    </div>
+
+    @* 2. Aviso de error (Flujo Alternativo 2.1) *@
+    @if (!string.IsNullOrWhiteSpace(mensajeError))
+    {
+        <div class="alert alert-danger" role="alert">@mensajeError</div>
+    }
+
+    <div class="row">
+        @* 3a. Resultados *@
+        <div class="col-md-8">
+            @if (impresoras == null)
+            {
+                <p>Cargando impresoras...</p>
+            }
+            else if (!impresoras.Any())
+            {
+                <div class="alert alert-warning" role="alert">
+                    No hay impresoras disponibles para los criterios seleccionados.
+                </div>
+            }
+            else
+            {
+                <table class="table table-striped table-hover" id="TableOfImpresoras">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Modelo</th>
+                            <th>Tipo</th>
+                            <th>Descripción</th>
+                            <th>€/kWh</th>
+                            <th>Precio reserva</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var imp in impresoras)
+                        {
+                            <tr>
+                                <td>@imp.Nombre</td>
+                                <td>@imp.Modelo</td>
+                                <td>@imp.Tipo</td>
+                                <td>@imp.Descripcion</td>
+                                <td>@imp.PrecioKilovatioHora.ToString("0.00") €</td>
+                                <td>@imp.PrecioReserva.ToString("0.00") €</td>
+                                <td>
+                                    <button type="button"
+                                            class="btn btn-sm btn-outline-primary"
+                                            @onclick="@(() => AñadirImpresora(imp))"
+                                            id="addImpresora_@imp.Id">
+                                        Añadir
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+
+        @* 3b. Carrito / selección (por defecto 1 hora) *@
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Selección actual</h5>
+                    @if (!seleccionadas.Any())
+                    {
+                        <p class="text-muted">No has seleccionado ninguna impresora.</p>
+                    }
+                    else
+                    {
+                        <ul class="list-group mb-3">
+                            @foreach (var item in seleccionadas)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>@item.Nombre</strong><br />
+                                        <small>Tiempo: 1 hora · @item.PrecioReserva.ToString("0.00") €</small>
+                                    </div>
+                                    <button type="button"
+                                            class="btn btn-sm btn-outline-danger"
+                                            @onclick="@(() => QuitarImpresora(item))">
+                                        Quitar
+                                    </button>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    <p class="fw-bold">Total estimado: @precioTotal.ToString("0.00") €</p>
+                    <button type="button"
+                            class="btn btn-success w-100"
+                            disabled="@(!seleccionadas.Any())"
+                            @onclick="IrAReservar"
+                            id="btnReservarImpresoras">
+                        Reservar Impresoras
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string? nombreFiltro;
+    private string? tipoSeleccionado;
+    private string? mensajeError;
+    private ICollection<SelectImpresora3DDTO>? impresoras;
+    private List<SelectImpresora3DDTO> seleccionadas = new();
+    private double precioTotal => seleccionadas.Sum(i => i.PrecioReserva);
+
+    protected override async Task OnInitializedAsync()
+    {
+        await BuscarImpresoras();
+    }
+
+    private async Task BuscarImpresoras()
+    {
+        mensajeError = null;
+        try
+        {
+            TipoImpresora? tipoParsed = Enum.TryParse<TipoImpresora>(tipoSeleccionado, out var t) ? t : null;
+            impresoras = await apiservice.GetImpresorasForRentalAsync(nombreFiltro, tipoParsed);
+        }
+        catch (ApiException ex)
+        {
+            mensajeError = $"Error al consultar las impresoras ({ex.StatusCode}).";
+            impresoras = new List<SelectImpresora3DDTO>();
+        }
+        catch (Exception ex)
+        {
+            mensajeError = $"Error inesperado: {ex.Message}";
+            impresoras = new List<SelectImpresora3DDTO>();
+        }
+    }
+
+    private void AñadirImpresora(SelectImpresora3DDTO imp)
+    {
+        if (!seleccionadas.Any(x => x.Id == imp.Id))
+        {
+            seleccionadas.Add(imp);
+        }
+    }
+
+    private void QuitarImpresora(SelectImpresora3DDTO imp)
+    {
+        seleccionadas.RemoveAll(x => x.Id == imp.Id);
+    }
+
+    private void IrAReservar() 
+    {
+        if (seleccionadas.Any())
+        {
+            Navigation.NavigateTo("/reservas/createreserva");
+        }
+    }
+}  
