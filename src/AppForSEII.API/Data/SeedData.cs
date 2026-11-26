@@ -149,25 +149,30 @@ namespace AppForSEII.API.Data;
                     licencia
                 );
                 dbcontext.Modelos3D.Add(modelo);
+            }
+            if(licencia2 != null && dbcontext.Modelos3D.FirstOrDefault(m => m.Nombre == "Dragon de fuego") == null){
                 Modelo3D modelo2 = new Modelo3D
                 (   
                     "Dragon de fuego",
                     "Personajes",
                     FormatoModelo3D.STL,
                     10,
-                    licencia
+                    licencia2
                 );
                 dbcontext.Modelos3D.Add(modelo2);
+            }
+            if(licencia3 != null && dbcontext.Modelos3D.FirstOrDefault(m => m.Nombre == "Jarron moderno") == null){
                 Modelo3D modelo3 = new Modelo3D
                 (   
                     "Jarron moderno",
                     "Decoración",
                     FormatoModelo3D.TresMF,
                     25,
-                    licencia
+                    licencia3
                 );
                 dbcontext.Modelos3D.Add(modelo3);
             }
+            dbcontext.SaveChanges();
 
         }
         
