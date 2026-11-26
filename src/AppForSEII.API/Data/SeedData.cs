@@ -168,6 +168,7 @@ namespace AppForSEII.API.Data;
                 );
                 dbcontext.Modelos3D.Add(modelo3);
             }
+            dbcontext.SaveChanges();
 
         }
         
