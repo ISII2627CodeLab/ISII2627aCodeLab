@@ -6,7 +6,7 @@ using AppForSEII.Web.Components;
 using AppForSEII.Web.Components.Account;
 using AppForSEII.Web.Data;
 using AppForSEII.Web.API;
-
+using AppForSEII.Web;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -77,7 +77,7 @@ string? URI2API = builder.Configuration.GetValue(typeof(string), "AppForSEIIAPIC
 
 //the environment variable URI2API is defined in appsettings.json
 builder.Services.AddScoped<IAppForSEIIAPIClient>(sp => new AppForSEIIAPIClient(URI2API!, new HttpClient()));
-
+builder.Services.AddScoped<CompraModelo3DStateContainer>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -93,6 +93,7 @@ else
 }
 app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
 app.UseHttpsRedirection();
+
 
 app.UseAntiforgery();
 
