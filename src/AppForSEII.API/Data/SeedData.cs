@@ -136,8 +136,6 @@ namespace AppForSEII.API.Data;
         public static void SeedModelos3D(ApplicationDbContext dbcontext)
         {
             LicenciaModelo3D? licencia = dbcontext.LicenciasModelo3D.FirstOrDefault(l => l.Nombre == "Licencia Estándar");
-            LicenciaModelo3D? licencia2 = dbcontext.LicenciasModelo3D.FirstOrDefault(l => l.Nombre == "Licencia Estándar");
-            LicenciaModelo3D? licencia3 = dbcontext.LicenciasModelo3D.FirstOrDefault(l => l.Nombre == "Licencia Estándar");
             if (licencia != null && dbcontext.Modelos3D.FirstOrDefault(m => m.Nombre == "Robot") == null)
             {
                 Modelo3D modelo = new Modelo3D
@@ -150,32 +148,8 @@ namespace AppForSEII.API.Data;
                 );
                 dbcontext.Modelos3D.Add(modelo);
             }
-            if(licencia2 != null && dbcontext.Modelos3D.FirstOrDefault(m => m.Nombre == "Dragon de fuego") == null){
-                Modelo3D modelo2 = new Modelo3D
-                (   
-                    "Dragon de fuego",
-                    "Personajes",
-                    FormatoModelo3D.STL,
-                    10,
-                    licencia2
-                );
-                dbcontext.Modelos3D.Add(modelo2);
-            }
-            if(licencia3 != null && dbcontext.Modelos3D.FirstOrDefault(m => m.Nombre == "Jarron moderno") == null){
-                Modelo3D modelo3 = new Modelo3D
-                (   
-                    "Jarron moderno",
-                    "Decoración",
-                    FormatoModelo3D.TresMF,
-                    25,
-                    licencia3
-                );
-                dbcontext.Modelos3D.Add(modelo3);
-            }
-            dbcontext.SaveChanges();
 
         }
-        
         public static void SeedMaterialesYPiezas(ApplicationDbContext dbContext)
         {
             // 1. Seed Materiales
