@@ -1,0 +1,97 @@
+@page "/encargos/detailencargo"
+@using AppForSEII.Web.API
+@using Microsoft.AspNetCore.Authorization
+@inject IAppForSEIIAPIClient apiservice
+@inject NavigationManager navigation
+
+@attribute [Authorize]
+
+<h3>Detalles del Encargo</h3>
+
+@if (encargo == null)
+{
+    <p class="text-danger">@error</p>
+}
+else
+{
+    <table class="table table-borderless table-sm">
+        <tr>
+            <th>Cliente</th>
+            <td id="CustomerName">@encargo.NombreCliente @encargo.ApellidosCliente</td>
+        </tr>
+        <tr>
+            <th>Dirección de envío</th>
+            <td id="DeliveryAddress">@encargo.DireccionEnvio</td>
+        </tr>
+        <tr>
+            <th>Teléfono</th>
+            <td id="PhoneNumber">@encargo.NumeroTelefono</td>
+        </tr>
+        <tr>
+            <th>Método de pago</th>
+            <td id="PaymentMethod">@encargo.MetodoPago</td>
+        </tr>
+        <tr>
+            <th>Fecha del encargo</th>
+            <td id="EncargoDate">@encargo.FechaEncargo.ToString("dd/MM/yyyy HH:mm:ss")</td>
+        </tr>
+    </table>
+
+    <h4>Líneas del Encargo</h4>
+
+    <table class="table" id="TableOfLineasEncargo">
+        <thead>
+            <tr>
+                <th scope="col">Pieza</th>
+                <th scope="col">Material</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Precio Unidad</th>
+                <th scope="col">Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in encargo.LineasEncargo)
+            {
+                <tr id="LineaEncargo_@item.Pieza3DId">
+                    <td>@item.NombrePieza</td>
+                    <td>@item.MaterialNombre</td>
+                    <td>@item.Cantidad</td>
+                    <td>@item.PrecioUnidad €</td>
+                    <td>@item.Subtotal €</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th scope="row" colspan="4" class="text-end">Precio Total</th>
+                <td id="TotalPrice">@encargo.PrecioTotal €</td>
+            </tr>
+        </tfoot>
+    </table>
+}
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public int EncargoID { get; set; }
+
+    private EncargoDetailsDTO? encargo;
+    private string error = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            encargo = await apiservice.GetEncargoAsync(EncargoID);
+        }
+        catch (ApiException)
+        {
+            encargo = null;
+        }
+
+        if (encargo == null)
+        {
+            error = $"Error! No se encuentra el encargo con id={EncargoID} o no estás autorizado.";
+        }
+    }
+}
